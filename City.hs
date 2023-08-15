@@ -11,7 +11,7 @@ newC :: String -> Point -> City
 newC = Cit
 
 nameC :: City -> String
-nameC Cit s _ = s
+nameC (Cit s _) = s
 
 distanceC :: City -> City -> Float
-distanceC Cit _ _ = difP p0 p1
+distanceC (Cit _ p0) (Cit _ p1) = difP p0 p1

@@ -2,6 +2,7 @@ module Link ( Link, newL, linksL, connectsL, capacityL, delayL )
    where
 
 import City
+import Quality
 
 data Link = Lin City City Quality deriving (Eq, Show)
 
