@@ -19,4 +19,4 @@ capacityL :: Link -> Int
 capacityL (Lin _ _ quality) = capacityQ quality
 
 delayL :: Link -> Float     -- la demora que sufre una conexion en este canal
-delayL (Lin c0 c1 quality) = distanceC c0 c1 * delayQ quality
+delayL (Lin c0 c1 quality) = delayQ quality
