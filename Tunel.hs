@@ -21,4 +21,4 @@ usesT :: Link -> Tunel -> Bool  -- indica si este tunel atraviesa ese link
 usesT l_0 (Tun links) = l_0 `elem` links
 
 delayT :: Tunel -> Float -- la demora que sufre una conexion en este tunel
-delayT (Tun links) = sum (map delayL links) / fromIntegral (length links)
+delayT (Tun links) = sum [delayL link | link <- links]
