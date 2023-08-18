@@ -33,7 +33,18 @@ linkedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan 
 linkedR (Reg _ links _) c0 c1 = any (\link -> linksL c0 c1 link || linksL c1 c0 link) links
 
 delayR :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
-delayR (Reg _ links _) c0 c1 = delayL link
-                           where link = head [l | l <- links, linksL c0 c1 l || linksL c1 c0]
+delayR (Reg _ links _) c0 c1
+   |null connectingLinks = error "No direct links between the cities"
+   |otherwise = sum (map delayL connectingLinks) / fromIntegral (length connectingLinks)
+      where connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0]
+
+delayR0 :: Region -> City -> City -> Float
+delayR0 (Reg _ _ tunnels) c0 c1 
+    | isConnected = delayT connectedTunnel
+    | otherwise   = error "The cities are not connected by a tunnel"
+    where
+        isConnected = any (connectsT c0 c1) tunnels
+        connectedTunnel = head [tunnel | tunnel <- tunnels, connectsT c0 c1 tunnel]
+
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
