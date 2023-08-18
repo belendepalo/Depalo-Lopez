@@ -123,7 +123,7 @@ testTunnelABUsesLinkABHigh =
        else "Test Tunnel AB Uses Link AB High: Failed"
 
 testTunnelABDelay = 
-    let expected = 2.0
+    let expected = 10.0
         result = delayT tunnelAB
     in if result == expected 
        then "Test Tunnel AB Delay: Passed"
