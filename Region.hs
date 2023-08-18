@@ -17,7 +17,7 @@ foundR (Reg cities _ _) newCity | newCity `elem` cities = error "The City is alr
                                 | otherwise = Reg (newCity:cities) _ _ 
 
 linkR :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
-linkR (Reg cities links _) c0 c1 quality 
+linkR (Reg cities links tunnels) c0 c1 quality 
    | c0 == c1 = error "Cannot link a city to itself"
    | c0 `notElem` cities || c1 `notElem` cities = error "One or both cities are not in the region"
    | otherwise = Reg cities ((newL c0 c1 quality):links) tunnels
