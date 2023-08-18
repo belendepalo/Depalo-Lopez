@@ -5,8 +5,7 @@ import City
 import Quality
 import Link
 import Tunel
-import Tunel (connectsT)
-import Link (linksL)
+
 
 data Region = Reg [City] [Link] [Tunel]
 
