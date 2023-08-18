@@ -15,7 +15,7 @@ newT = Tun
 connectsT :: City -> City -> Tunel -> Bool -- inidca si este tunel conceta estas dos ciudades distintas
 connectsT c0 c1 (Tun links) = 
    let (Lin cityA _ _) = head links ; (Lin _ cityB _) = last links
-   in ( cityA == c0 && cityB == c1) || ( cityB == c0 && cityA == c1)
+   in (cityA == c0 && cityB == c1) || (cityB == c0 && cityA == c1)
 
 usesT :: Link -> Tunel -> Bool  -- indica si este tunel atraviesa ese link
 usesT l_0 (Tun links) = l_0 `elem` links 
