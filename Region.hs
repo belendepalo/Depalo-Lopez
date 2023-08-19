@@ -23,7 +23,10 @@ linkR (Reg cities links tunnels) c0 c1 quality
    | otherwise = Reg cities (newL c0 c1 quality:links) tunnels
 
 tunelR :: Region -> [ City ] -> Region -- genera una comunicación entre dos ciudades distintas de la región
-tunelR (Reg cities links tunnels)
+tunelR (Reg cities links tunnels) citiesToConnect
+   | length citiesToConnect < 2 = error "At least two cities are required to create a tunnel"
+   | not (all (citiesToConnect `elem` cities)) = error "One or more cities are not in the region"
+
 
 connectedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan conectadas por un tunel
 connectedR (Reg _ _ tunnels) c0 c1 = any (connectsT c0 c1) tunnels
