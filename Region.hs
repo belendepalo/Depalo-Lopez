@@ -34,16 +34,16 @@ connectedR (Reg _ _ tunnels) c0 c1 = any (connectsT c0 c1) tunnels
 linkedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan enlazadas
 linkedR (Reg _ links _) c0 c1 = any (\link -> linksL c0 c1 link || linksL c1 c0 link) links
 
-delayR :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
-delayR (Reg _ links _) c0 c1
+delayR0 :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
+delayR0 (Reg _ links _) c0 c1
    | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
    | null connectingLinks = error "No direct links between the cities"
    | otherwise = sum (map delayL connectingLinks) / fromIntegral (length connectingLinks)
    where
       connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0 link]
 
-delayR0 :: Region -> City -> City -> Float
-delayR0 (Reg _ _ tunnels) c0 c1
+delayR1 :: Region -> City -> City -> Float
+delayR1 (Reg _ _ tunnels) c0 c1
    | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
    | isConnected = delayT connectedTunnel
    | otherwise  = error "The cities are not connected by a tunnel"
@@ -51,8 +51,8 @@ delayR0 (Reg _ _ tunnels) c0 c1
       isConnected = any (connectsT c0 c1) tunnels
       connectedTunnel = head [tunnel | tunnel <- tunnels, connectsT c0 c1 tunnel]
 
-delayR1 :: Region -> City -> City -> Float
-delayR1 (Reg cities links tunnels) c0 c1
+delayR2 :: Region -> City -> City -> Float
+delayR2 (Reg cities links tunnels) c0 c1
    | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
    | isConnected = delayT connectedTunnel
    | isLinked = averageDelayL connectingLinks
@@ -62,7 +62,7 @@ delayR1 (Reg cities links tunnels) c0 c1
       connectedTunnel = head [tunnel | tunnel <- tunnels, connectsT c0 c1 tunnel]
       isLinked = any (\link -> linksL c0 c1 link || linksL c1 c0 link) links
       connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0 link]
-      averageDelayL ls = sum (map delayL ls) / fromIntegral (length ls)
+      averageDelayL selectedLinks = sum (map delayL selectedLinks) / fromIntegral (length selectedLinks)
 
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
