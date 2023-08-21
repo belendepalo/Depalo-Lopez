@@ -14,13 +14,14 @@ newR = Reg [] [] []
 foundR :: Region -> City -> Region
 foundR (Reg cities links tunnels) newCity
    | newCity `elem` cities = error "The City is already in the Region"
-   | any (\city -> distanceC city newCity == 0) cities = error "A city with the same coordinates already exists"
-   | otherwise = Reg (newCity:cities) links tunnels
+   | any (\city -> sameCoordinates city newCity) cities = error "A city with the same coordinates already exists"
+   | otherwise = Reg (newCity:cities) _ _
 
 linkR :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
 linkR (Reg cities links tunnels) c0 c1 quality
    | c0 == c1 = error "Cannot link a city to itself"
    | not (citiesInRegion c0 c1 cities)  = error "One or both cities are not in the region"
+   | sameCoordinates c0 c1 = error "Both cities cannot have the same coordinates"
    | otherwise = Reg cities (newL c0 c1 quality:links) tunnels
 
 tunelR :: Region -> [ City ] -> Region -- genera una comunicación entre dos ciudades distintas de la región
@@ -37,7 +38,7 @@ linkedR (Reg _ links _) c0 c1 = any (\link -> linksL c0 c1 link || linksL c1 c0 
 -- Opciones para el dealyR
 
 delayR0 :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
-delayR0 (Reg _ links _) c0 c1
+delayR0 (Reg cities links _) c0 c1
    | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
    | null connectingLinks = error "No direct links between the cities"
    | otherwise = sum (map delayL connectingLinks) / fromIntegral (length connectingLinks)
@@ -45,7 +46,7 @@ delayR0 (Reg _ links _) c0 c1
       connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0 link]
 
 delayR1 :: Region -> City -> City -> Float
-delayR1 (Reg _ _ tunnels) c0 c1
+delayR1 (Reg cities _ tunnels) c0 c1
    | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
    | isConnected = delayT connectedTunnel
    | otherwise  = error "The cities are not connected by a tunnel"
@@ -69,10 +70,11 @@ delayR2 (Reg cities links tunnels) c0 c1
 -- volvemos a nuestra programacion habitual
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
+availableCapacityForR (Reg _ links _) c0 c1 
 
 
 citiesInRegion :: City -> City -> [City] -> Bool
-citiesInRegion c0 c1 cities = c0 `elem` cities && c1 `elem` cities
+citiesInRegion c0 c1 cities = (c0 `elem` cities) && (c1 `elem` cities
 
 getAllCities :: Region -> [City]
 getAllCities (Reg cities _ _) = cities
@@ -82,3 +84,8 @@ getAllLinks (Reg _ links _) = links
 
 getAllTunnels :: Region -> [Tunel]
 getAllTunnels (Reg _ _ tunnels) = tunnels
+)
+
+capacityUsed :: Region -> City -> City -> Int
+capacityUsed (Reg _ _ tunels) c0 c1 
+ 
