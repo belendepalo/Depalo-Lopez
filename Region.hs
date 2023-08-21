@@ -14,8 +14,8 @@ newR = Reg [] [] []
 foundR :: Region -> City -> Region
 foundR (Reg cities links tunnels) newCity
    | newCity `elem` cities = error "The City is already in the Region"
-   | any (\city -> sameCoordinates city newCity) cities = error "A city with the same coordinates already exists"
-   | otherwise = Reg (newCity:cities) _ _
+   | any (`sameCoordinates` newCity) cities = error "A city with the same coordinates already exists"
+   | otherwise = Reg (newCity:cities) links tunnels
 
 linkR :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
 linkR (Reg cities links tunnels) c0 c1 quality
@@ -70,11 +70,13 @@ delayR2 (Reg cities links tunnels) c0 c1
 -- volvemos a nuestra programacion habitual
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
-availableCapacityForR (Reg _ links _) c0 c1 
+availableCapacityForR (Reg _ links _) c0 c1
 
+capacityUsed :: Region -> City -> City -> Int
+capacityUsed (Reg _ _ tunels) c0 c1
 
 citiesInRegion :: City -> City -> [City] -> Bool
-citiesInRegion c0 c1 cities = (c0 `elem` cities) && (c1 `elem` cities
+citiesInRegion c0 c1 cities = (c0 `elem` cities) && (c1 `elem` cities)
 
 getAllCities :: Region -> [City]
 getAllCities (Reg cities _ _) = cities
@@ -84,8 +86,3 @@ getAllLinks (Reg _ links _) = links
 
 getAllTunnels :: Region -> [Tunel]
 getAllTunnels (Reg _ _ tunnels) = tunnels
-)
-
-capacityUsed :: Region -> City -> City -> Int
-capacityUsed (Reg _ _ tunels) c0 c1 
- 
