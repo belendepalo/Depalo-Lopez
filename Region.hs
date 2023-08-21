@@ -42,7 +42,7 @@ linkedR (Reg _ links _) c0 c1 = any (\link -> linksL c0 c1 link || linksL c1 c0 
 
 getLinkBetween :: City -> City -> [Link] -> Maybe Link
 getLinkBetween c0 c1 links
-   | linkedR (Reg _ links _) c1 c2 = find (\link -> (connectsL c0 link && connectsL c1 link) || (connectsL c1 link && connectsL c0 link)) links
+   | linkedR (Reg _ links _) c0 c1 = find (\link -> (connectsL c0 link && connectsL c1 link) || (connectsL c1 link && connectsL c0 link)) links
    | otherwise = Nothing
 
 consecutiveLinks :: [City] -> [Link] -> [Link]
