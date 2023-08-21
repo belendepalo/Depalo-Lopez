@@ -1,4 +1,4 @@
-module City ( City, newC, nameC, distanceC )
+module City ( City, newC, nameC, distanceC, sameCoordinates)
    where
 
 import Point
