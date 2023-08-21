@@ -92,8 +92,8 @@ availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad di
 availableCapacityForR (Reg _ links _) c0 c1 
    |
 
-capacityUsed :: Region -> City -> City -> Int
-capacityUsed (Reg _ _ tunels) c0 c1
+usedCapacityForR :: Region -> City -> City -> Int
+usedCapacityForR (Reg _ _ tunels) c0 c1
 
 citiesInRegion :: City -> City -> [City] -> Bool
 citiesInRegion c0 c1 cities = (`elem` c0 cities) && (`elem` c1 cities)
