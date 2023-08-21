@@ -15,4 +15,4 @@ distanceC :: City -> City -> Float
 distanceC (Cit _ p0) (Cit _ p1) = difP p0 p1
 
 sameCoordinates :: City -> City -> Bool
-sameCoordinates (Cit _ poi0) (Cit _ poi1) = poi0 == poi1
+sameCoordinates (Cit _ p0) (Cit _ p1) = p0 == p1
