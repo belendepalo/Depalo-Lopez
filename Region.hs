@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Redundant bracket" #-}
 module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR, availableCapacityForR, citiesInRegion, getAllCities, getAllLinks, getAllTunnels)
    where
 
@@ -28,12 +30,28 @@ tunelR :: Region -> [ City ] -> Region -- genera una comunicación entre dos ciu
 tunelR (Reg cities links tunnels) citiesToConnect
    | length citiesToConnect < 2 = error "At least two cities are required to create a tunnel"
    | any (`notElem` cities) citiesToConnect = error "One or more cities are not in the region"
+   | otherwise = 
+         let newTunnel = newT consecutiveLinks citiesToConnect links
+         in Reg cities links (newTunnel:tunnels)
 
 connectedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan conectadas por un tunel
 connectedR (Reg _ _ tunnels) c0 c1 = any (connectsT c0 c1) tunnels
 
 linkedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan enlazadas
 linkedR (Reg _ links _) c0 c1 = any (\link -> linksL c0 c1 link || linksL c1 c0 link) links
+
+getLinkBetween :: City -> City -> [Link] -> Maybe Link
+getLinkBetween c0 c1 links
+   | linkedR (Reg _ links _) c1 c2 = find (\link -> (connectsL c0 link && connectsL c1 link) || (connectsL c1 link && connectsL c0 link)) links
+   | otherwise = Nothing
+
+consecutiveLinks :: [City] -> [Link] -> [Link]
+consecutiveLinks [] _ = []
+consecutiveLinks [_] _ = []
+consecutiveLinks (c0:c1:rest) links = 
+   case getLinkBetween c0 c1 links of
+      Just link -> ( link : consecutiveLinks (c1:rest) links)
+      Nothing -> error ("No link found between " ++ nameC c0 ++ " and " ++ nameC c1)
 
 -- Opciones para el dealyR
 
@@ -76,7 +94,7 @@ capacityUsed :: Region -> City -> City -> Int
 capacityUsed (Reg _ _ tunels) c0 c1
 
 citiesInRegion :: City -> City -> [City] -> Bool
-citiesInRegion c0 c1 cities = (c0 `elem` cities) && (c1 `elem` cities)
+citiesInRegion c0 c1 cities = (`elem` c0 cities) && (`elem` c1 cities)
 
 getAllCities :: Region -> [City]
 getAllCities (Reg cities _ _) = cities
