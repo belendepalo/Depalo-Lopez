@@ -34,6 +34,8 @@ connectedR (Reg _ _ tunnels) c0 c1 = any (connectsT c0 c1) tunnels
 linkedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan enlazadas
 linkedR (Reg _ links _) c0 c1 = any (\link -> linksL c0 c1 link || linksL c1 c0 link) links
 
+-- Opciones para el dealyR
+
 delayR0 :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
 delayR0 (Reg _ links _) c0 c1
    | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
@@ -64,6 +66,7 @@ delayR2 (Reg cities links tunnels) c0 c1
       connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0 link]
       averageDelayL selectedLinks = sum (map delayL selectedLinks) / fromIntegral (length selectedLinks)
 
+-- volvemos a nuestra programacion habitual
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
 
