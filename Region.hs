@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Redundant bracket" #-}
 
-module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR, availableCapacityForR, citiesInRegion, getAllCities, getAllLinks, getAllTunnels)
+module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR, availableCapacityForR, usedCapacityForR, citiesInRegion, getAllCities, getAllLinks, getAllTunnels)
    where
 
 import City
@@ -89,11 +89,11 @@ delayR2 (Reg cities links tunnels) c0 c1
 -- volvemos a nuestra programacion habitual
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
-availableCapacityForR (Reg _ links _) c0 c1 
+availableCapacityForR (Reg cities links tunnels) c0 c1 
    |
 
 usedCapacityForR :: Region -> City -> City -> Int
-usedCapacityForR (Reg _ _ tunels) c0 c1
+usedCapacityForR (Reg cities links tunnels) c0 c1
 
 citiesInRegion :: City -> City -> [City] -> Bool
 citiesInRegion c0 c1 cities = (`elem` c0 cities) && (`elem` c1 cities)
