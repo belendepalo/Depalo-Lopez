@@ -1,4 +1,4 @@
-module Quality ( Quality, newQ, capacityQ, delayQ )
+module Quality ( Quality(..), newQ, capacityQ, delayQ )
    where
 
 data Quality = Qua String Int Float deriving (Eq, Show)

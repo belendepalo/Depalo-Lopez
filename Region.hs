@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Redundant bracket" #-}
+
 module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR, availableCapacityForR, citiesInRegion, getAllCities, getAllLinks, getAllTunnels)
    where
 
@@ -26,12 +27,12 @@ linkR (Reg cities links tunnels) c0 c1 quality
    | sameCoordinates c0 c1 = error "Both cities cannot have the same coordinates"
    | otherwise = Reg cities (newL c0 c1 quality:links) tunnels
 
-tunelR :: Region -> [ City ] -> Region -- genera una comunicación entre dos ciudades distintas de la región
+tunelR :: Region -> [City] -> Region -- genera una comunicación entre dos ciudades distintas de la región
 tunelR (Reg cities links tunnels) citiesToConnect
    | length citiesToConnect < 2 = error "At least two cities are required to create a tunnel"
    | any (`notElem` cities) citiesToConnect = error "One or more cities are not in the region"
    | otherwise = 
-         let newTunnel = newT consecutiveLinks citiesToConnect links
+         let newTunnel = newT $ [newL (head citiesToConnect) (last citiesToConnect) (Qua "Virtual" 0 0)] ++ (consecutiveLinks citiesToConnect links)
          in Reg cities links (newTunnel:tunnels)
 
 connectedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan conectadas por un tunel
@@ -88,7 +89,8 @@ delayR2 (Reg cities links tunnels) c0 c1
 -- volvemos a nuestra programacion habitual
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
-availableCapacityForR (Reg _ links _) c0 c1
+availableCapacityForR (Reg _ links _) c0 c1 
+   |
 
 capacityUsed :: Region -> City -> City -> Int
 capacityUsed (Reg _ _ tunels) c0 c1
