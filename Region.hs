@@ -1,4 +1,4 @@
-module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR, availableCapacityForR)
+module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR, availableCapacityForR, citiesInRegion, getAllCities, getAllLinks, getAllTunnels)
    where
 
 import City
@@ -11,11 +11,11 @@ data Region = Reg [City] [Link] [Tunel]
 newR :: Region
 newR = Reg [] [] []
 
-foundR :: Region -> City -> Region -- agrega una nueva ciudad a la región
-foundR (Reg cities _ _) newCity
+foundR :: Region -> City -> Region
+foundR (Reg cities links tunnels) newCity
    | newCity `elem` cities = error "The City is already in the Region"
    | any (\city -> distanceC city newCity == 0) cities = error "A city with the same coordinates already exists"
-   | otherwise = Reg (newCity:cities) _ _
+   | otherwise = Reg (newCity:cities) links tunnels
 
 linkR :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
 linkR (Reg cities links tunnels) c0 c1 quality
@@ -73,3 +73,12 @@ availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad di
 
 citiesInRegion :: City -> City -> [City] -> Bool
 citiesInRegion c0 c1 cities = c0 `elem` cities && c1 `elem` cities
+
+getAllCities :: Region -> [City]
+getAllCities (Reg cities _ _) = cities
+
+getAllLinks :: Region -> [Link]
+getAllLinks (Reg _ links _) = links
+
+getAllTunnels :: Region -> [Tunel]
+getAllTunnels (Reg _ _ tunnels) = tunnels
