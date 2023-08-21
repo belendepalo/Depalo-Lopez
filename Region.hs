@@ -70,9 +70,12 @@ delayR2 (Reg cities links tunnels) c0 c1
 -- volvemos a nuestra programacion habitual
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
+availableCapacityForR (Reg _ links _) c0 c1 
 
 
 citiesInRegion :: City -> City -> [City] -> Bool
 citiesInRegion c0 c1 cities = (c0 `elem` cities) && (c1 `elem` cities)
 
---capacityUsed 
+capacityUsed :: Region -> City -> City -> Int
+capacityUsed (Reg _ _ tunels) c0 c1 
+ 
