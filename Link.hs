@@ -13,7 +13,9 @@ connectsL :: City -> Link -> Bool   -- indica si esta ciudad es parte de este li
 connectsL city (Lin c0 c1 _ ) = (city == c0) || (city == c1)
 
 linksL :: City -> City -> Link -> Bool -- indica si estas dos ciudades distintas estan conectadas mediante este link
-linksL city1 city2 (Lin c0 c1 _) = (city1 == c0 && city2 == c1) || (city1 == c1 && city2 == c0)
+linksL city1 city2 (Lin c0 c1 _)
+   | city1 == city2 = error "Cities cannot be the same"
+   | otherwise = (city1 == c0 && city2 == c1) || (city1 == c1 && city2 == c0)
 
 capacityL :: Link -> Int
 capacityL (Lin _ _ quality) = capacityQ quality
