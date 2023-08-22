@@ -1,14 +1,13 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Redundant bracket" #-}
 
-module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR, availableCapacityForR, usedCapacityForR, citiesInRegion, getAllCities, getAllLinks, getAllTunnels)
+module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR3, availableCapacityForR, capacityUsed, citiesInRegion, getAllCities, getAllLinks, getAllTunnels)
    where
 
 import City
 import Quality
 import Link
 import Tunel
-import GHC.Exts.Heap (GenClosure(link))
 
 data Region = Reg [City] [Link] [Tunel]
 
@@ -57,6 +56,14 @@ consecutiveLinks (c0:c1:rest) links =
 
 -- Opciones para el dealyR
 
+delayR3 :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
+delayR3 (Reg cities links _) c0 c1
+   | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
+   | null connectingLinks = error "No direct links between the cities"
+   | otherwise = sum (map delayL connectingLinks)
+   where
+      connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0 link]
+
 delayR0 :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
 delayR0 (Reg cities links _) c0 c1
    | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
@@ -90,19 +97,18 @@ delayR2 (Reg cities links tunnels) c0 c1
 -- volvemos a nuestra programacion habitual
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
-availableCapacityForR region@(Reg _ links tunels) c0 c1 
-   | link == Nothing = 0
-   | otherwise = capacityLink - allCapacityUsed
+availableCapacityForR region@(Reg _ links tunnels) c0 c1 = case link of
+   Just l -> capacityLink - capacityUsed region l
+   Nothing -> error "There are connection errors between the cities"
    where 
       link = getLinkBetween c0 c1 links
-      capacityLink = capacityL link
-      allCapacityUsed = capacityUsed region link 
+      capacityLink = maybe 0 capacityL link
 
 capacityUsed :: Region -> Link -> Int
 capacityUsed (Reg _ _ tunels) link = length [tunel | tunel <- tunels, usesT link tunel]
 
 citiesInRegion :: City -> City -> [City] -> Bool
-citiesInRegion c0 c1 cities = (`elem` c0 cities) && (`elem` c1 cities)
+citiesInRegion c0 c1 cities = (c0 `elem` cities) && (c1 `elem` cities)
 
 getAllCities :: Region -> [City]
 getAllCities (Reg cities _ _) = cities
