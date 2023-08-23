@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Redundant bracket" #-}
 
-module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR3, availableCapacityForR, capacityUsed, citiesInRegion, getAllCities, getAllLinks, getAllTunnels)
+module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR3, availableCapacityForR)
    where
 
 import City
@@ -28,12 +28,12 @@ linkR (Reg cities links tunnels) c0 c1 quality
    | otherwise = Reg cities (newL c0 c1 quality:links) tunnels
 
 tunelR :: Region -> [City] -> Region -- genera una comunicación entre dos ciudades distintas de la región
-tunelR (Reg cities links tunnels) citiesToConnect
+tunelR region@(Reg cities links tunnels) citiesToConnect
    | length citiesToConnect < 2 = error "At least two cities are required to create a tunnel"
-   | any (`notElem` cities) citiesToConnect = error "One or more cities are not in the region"
-   | otherwise = 
-         let newTunnel = newT $ [newL (head citiesToConnect) (last citiesToConnect) (Qua "Virtual" 0 0)] ++ (consecutiveLinks citiesToConnect links)
-         in Reg cities links (newTunnel:tunnels)
+   | not (allCitiesConnected region citiesToConnect) = error "Not all cities are connected"
+   | otherwise = Reg cities links (newT allLinks:tunnels)
+   where 
+      allLinks = getLinksBetweenCities citiesToConnect links
 
 connectedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan conectadas por un tunel
 connectedR (Reg _ _ tunnels) c0 c1 = any (connectsT c0 c1) tunnels
@@ -41,18 +41,13 @@ connectedR (Reg _ _ tunnels) c0 c1 = any (connectsT c0 c1) tunnels
 linkedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan enlazadas
 linkedR (Reg _ links _) c0 c1 = any (\link -> linksL c0 c1 link || linksL c1 c0 link) links
 
-getLinkBetween :: City -> City -> [Link] -> Maybe Link
-getLinkBetween c0 c1 links
-   | linkedR (Reg _ links _) c0 c1 = find (\link -> (connectsL c0 link && connectsL c1 link) || (connectsL c1 link && connectsL c0 link)) links
-   | otherwise = Nothing
-
-consecutiveLinks :: [City] -> [Link] -> [Link]
-consecutiveLinks [] _ = []
-consecutiveLinks [_] _ = []
-consecutiveLinks (c0:c1:rest) links = 
-   case getLinkBetween c0 c1 links of
-      Just link -> ( link : consecutiveLinks (c1:rest) links)
-      Nothing -> error ("No link found between " ++ nameC c0 ++ " and " ++ nameC c1)
+delayR :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
+delayR (Reg cities links tunnels) c0 c1 
+   | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
+   | null connectingLinks = error "No direct links between the cities"
+   | otherwise = sum (map delayL connectingLinks)
+   where
+      connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0 link]
 
 -- Opciones para el dealyR
 
@@ -104,6 +99,8 @@ availableCapacityForR region@(Reg _ links tunnels) c0 c1 = case link of
       link = getLinkBetween c0 c1 links
       capacityLink = maybe 0 capacityL link
 
+
+-- Funciones Extras
 capacityUsed :: Region -> Link -> Int
 capacityUsed (Reg _ _ tunels) link = length [tunel | tunel <- tunels, usesT link tunel]
 
@@ -118,3 +115,26 @@ getAllLinks (Reg _ links _) = links
 
 getAllTunnels :: Region -> [Tunel]
 getAllTunnels (Reg _ _ tunnels) = tunnels
+
+allCitiesConnected :: Region -> [City] -> Bool
+allCitiesConnected region citiesToConnect =
+    all (\city -> any (\neighbor -> linkedR region city neighbor || linkedR region neighbor city) (filter (/= city) citiesToConnect)) citiesToConnect
+
+getLinksBetweenCities :: [City] -> [Link] -> [Link]
+getLinksBetweenCities citiesToConnect links =
+    [link | link <- links, linksConnectCities link]
+    where
+        linksConnectCities (Lin c0 c1 _) = c0 `elem` citiesToConnect && c1 `elem` citiesToConnect
+
+getLinkBetween :: City -> City -> [Link] -> Maybe Link
+getLinkBetween c0 c1 links
+   | linkedR (Reg _ links _) c0 c1 = find (\link -> (connectsL c0 link && connectsL c1 link) || (connectsL c1 link && connectsL c0 link)) links
+   | otherwise = Nothing
+
+consecutiveLinks :: [City] -> [Link] -> [Link]
+consecutiveLinks [] _ = []
+consecutiveLinks [_] _ = []
+consecutiveLinks (c0:c1:rest) links = 
+   case getLinkBetween c0 c1 links of
+      Just link -> ( link : consecutiveLinks (c1:rest) links)
+      Nothing -> error ("No link found between " ++ nameC c0 ++ " and " ++ nameC c1)
