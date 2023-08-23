@@ -63,15 +63,6 @@ capacityUsed (Reg _ _ tunels) link = length [tunel | tunel <- tunels, usesT link
 citiesInRegion :: City -> City -> [City] -> Bool
 citiesInRegion c0 c1 cities = (c0 `elem` cities) && (c1 `elem` cities)
 
-getAllCities :: Region -> [City]
-getAllCities (Reg cities _ _) = cities
-
-getAllLinks :: Region -> [Link]
-getAllLinks (Reg _ links _) = links
-
-getAllTunnels :: Region -> [Tunel]
-getAllTunnels (Reg _ _ tunnels) = tunnels
-
 allCitiesConnected :: Region -> [City] -> Bool
 allCitiesConnected region citiesToConnect =
     all (\city -> any (\neighbor -> linkedR region city neighbor || linkedR region neighbor city) (filter (/= city) citiesToConnect)) citiesToConnect
