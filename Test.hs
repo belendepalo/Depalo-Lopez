@@ -40,8 +40,16 @@ link1 = newL buenosAires cordoba highQuality
 link2 = newL cordoba mendoza lowQuality
 link3 = newL mendoza cordoba highQuality
 link4 = newL mendoza buenosAires lowQuality
-link5 = newL cordoba sanLuis lowQuality -- oh nooo
+link5 = newL cordoba sanLuis lowQuality 
 link6 = newL sanLuis buenosAires highQuality
+
+-- Tunnels
+tunnel1 = newT [link1, link2, link3]
+tunnel2 = newT [link1, link2, link5]
+tunnel3 = newT [link1, link4, link3]
+tunnel4 = newT [link4, link2, link3]
+
+
 
 
 
@@ -88,7 +96,25 @@ testing = [
     -- Tunel module tests
     testF (newT [link1, link2, link3]),
     testF (newT [link4, link2, link2]),
-    testF (newT [link1, link2, link5])
+    testF (newT [link1, link2, link5]),
+    testF (connectsT buenosAires cordoba tunnel1),
+    testF (connectsT buenosAires mendoza tunnel1),
+    testF (connectsT buenosAires mendoza tunnel2),
+    testF (connectsT buenosAires mendoza tunnel3),
+    testF (connectsT buenosAires mendoza tunnel4),
+    testF (usesT link1 tunnel1),
+    testF (usesT link1 tunnel2),
+    testF (usesT link3 tunnel4),
+    testF (usesT link2 tunnel2),
+    testF (usesT link1 tunnel3),
+    testF (delayT tunnel1),
+    testF (delayT tunnel2),
+    testF (delayT tunnel3)
+
+    -- Region module tests
+
+
+   
 
     ]
 
