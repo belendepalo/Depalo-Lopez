@@ -32,7 +32,7 @@ tunelR region@(Reg cities links tunnels) citiesToConnect
    | length citiesToConnect < 2 = error "At least two cities are required to create a tunnel"
    | not (allCitiesConnected region citiesToConnect) = error "Not all cities are connected"
    | otherwise = Reg cities links (newT allLinks:tunnels)
-   where 
+   where
       allLinks = getLinksBetweenCities citiesToConnect links
 
 connectedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan conectadas por un tunel
@@ -42,7 +42,7 @@ linkedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan 
 linkedR (Reg _ links _) c0 c1 = any (\link -> linksL c0 c1 link || linksL c1 c0 link) links
 
 delayR :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
-delayR (Reg cities links tunnels) c0 c1 
+delayR (Reg cities links tunnels) c0 c1
    | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
    | null connectingTunnels = error "No direct links between the cities"
    | otherwise = delayT (head connectingTunnels)
@@ -53,7 +53,7 @@ availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad di
 availableCapacityForR region@(Reg _ links tunnels) c0 c1
    | null linksConnectingCities = error "There are connection errors between the cities"
    | otherwise = capacityLink - capacityUsed region (head linksConnectingCities)
-   where 
+   where
       linksConnectingCities = getLink c0 c1 links
       capacityLink = capacityL (head linksConnectingCities)
 
@@ -65,13 +65,12 @@ citiesInRegion c0 c1 cities = (c0 `elem` cities) && (c1 `elem` cities)
 
 allCitiesConnected :: Region -> [City] -> Bool
 allCitiesConnected region citiesToConnect =
-    all (\city -> any (\neighbor -> linkedR region city neighbor || linkedR region neighbor city) (filter (/= city) citiesToConnect)) citiesToConnect
+   all (\city -> any (\neighbor -> linkedR region city neighbor || linkedR region neighbor city) (filter (/= city) citiesToConnect)) citiesToConnect
 
 getLinksBetweenCities :: [City] -> [Link] -> [Link]
-getLinksBetweenCities citiesToConnect links =
-    [link | link <- links, linksConnectCities link]
-    where
-        linksConnectCities (Lin c0 c1 _) = c0 `elem` citiesToConnect && c1 `elem` citiesToConnect
+getLinksBetweenCities citiesToConnect links = [link | link <- links, linksConnectingCities link]
+   where
+      linksConnectingCities link = any (`connectsL` link) citiesToConnect
 
 getLink :: City -> City -> [Link] -> [Link]
-getLink c0 c1 links = [link | link <- links, connectsL c0 link || connectsL c1 link]
+getLink c0 c1 links = [link | link <- links, (connectsL c0 link && connectsL c1 link) || (connectsL c1 link && connectsL c0 link)]
