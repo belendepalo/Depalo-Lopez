@@ -20,9 +20,9 @@ testF action = unsafePerformIO $ do
 
 -- Points
 point1 = newP 5 8
-point2 = newP 6 9 
-point3 = newP 7 13 
-point4 = newP 6 9 
+point2 = newP 6 9
+point3 = newP 7 13
+point4 = newP 6 9
 
 
 -- Qualities
@@ -40,7 +40,7 @@ link1 = newL buenosAires cordoba highQuality
 link2 = newL cordoba mendoza lowQuality
 link3 = newL mendoza cordoba highQuality
 link4 = newL mendoza buenosAires lowQuality
-link5 = newL cordoba sanLuis lowQuality 
+link5 = newL cordoba sanLuis lowQuality
 link6 = newL sanLuis buenosAires highQuality
 
 -- Tunnels
@@ -114,8 +114,8 @@ testing = [
     -- Region module tests
 
 
-   
+
 
     ]
 
-showResults = map (\(i, r) -> "Test " ++ show i ++ ": " ++ show r) (zip [1..] testing)
+showResults = zipWith (\ i r -> "Test " ++ show i ++ ": " ++ show r) [1..] testing

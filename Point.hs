@@ -7,5 +7,5 @@ newP :: Int -> Int -> Point
 newP = Poi
 
 difP :: Point -> Point -> Float  -- distancia absoluta
-difP (Poi x1 y1) (Poi x2 y2) = sqrt(fromIntegral ((x2 - x1)^2 + (y2 - y1)^2))
+difP (Poi x0 y0) (Poi x1 y1) = sqrt(fromIntegral ((x1 - x0)^2 + (y1 - y0)^2))
 
