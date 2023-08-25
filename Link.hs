@@ -8,7 +8,7 @@ data Link = Lin City City Quality deriving (Eq, Show)
 
 newL :: City -> City -> Quality -> Link -- genera un link entre dos ciudades distintas
 newL c0 c1 quality
-   | sameCoordinates c0 c1 = error "Cannnot create a link between the same city"
+   | sameCoordinates c0 c1 = error "Cannnot create a link with same coordinates"
    | otherwise = Lin c0 c1 quality
 
 connectsL :: City -> Link -> Bool   -- indica si esta ciudad es parte de este link
