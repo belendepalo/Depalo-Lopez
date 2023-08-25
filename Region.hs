@@ -44,10 +44,10 @@ linkedR (Reg _ links _) c0 c1 = any (\link -> linksL c0 c1 link || linksL c1 c0 
 delayR :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
 delayR (Reg cities links tunnels) c0 c1 
    | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
-   | null connectingLinks = error "No direct links between the cities"
-   | otherwise = sum (map delayL connectingLinks)
+   | null connectingTunnels = error "No direct links between the cities"
+   | otherwise = delayT (head connectingTunnels)
    where
-      connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0 link]
+      connectingTunnels = [tunnel | tunnel <- tunnels, connectsT c0 c1 tunnel || connectsT c1 c0 tunnel]
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
 availableCapacityForR region@(Reg _ links tunnels) c0 c1
@@ -75,44 +75,3 @@ getLinksBetweenCities citiesToConnect links =
 
 getLink :: City -> City -> [Link] -> [Link]
 getLink c0 c1 links = [link | link <- links, connectsL c0 link || connectsL c1 link]
-
-
--- Opciones para el dealyR
-
-delayR3 :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
-delayR3 (Reg cities links _) c0 c1
-   | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
-   | null connectingLinks = error "No direct links between the cities"
-   | otherwise = sum (map delayL connectingLinks)
-   where
-      connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0 link]
-
-delayR0 :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
-delayR0 (Reg cities links _) c0 c1
-   | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
-   | null connectingLinks = error "No direct links between the cities"
-   | otherwise = sum (map delayL connectingLinks) / fromIntegral (length connectingLinks)
-   where
-      connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0 link]
-
-delayR1 :: Region -> City -> City -> Float
-delayR1 (Reg cities _ tunnels) c0 c1
-   | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
-   | isConnected = delayT connectedTunnel
-   | otherwise  = error "The cities are not connected by a tunnel"
-   where
-      isConnected = any (connectsT c0 c1) tunnels
-      connectedTunnel = head [tunnel | tunnel <- tunnels, connectsT c0 c1 tunnel]
-
-delayR2 :: Region -> City -> City -> Float
-delayR2 (Reg cities links tunnels) c0 c1
-   | not (citiesInRegion c0 c1 cities) = error "One or both cities are not in the region"
-   | isConnected = delayT connectedTunnel
-   | isLinked = averageDelayL connectingLinks
-   | otherwise = error "The cities are not connected or linked"
-   where
-      isConnected = any (connectsT c0 c1) tunnels
-      connectedTunnel = head [tunnel | tunnel <- tunnels, connectsT c0 c1 tunnel]
-      isLinked = any (\link -> linksL c0 c1 link || linksL c1 c0 link) links
-      connectingLinks = [link | link <- links, linksL c0 c1 link || linksL c1 c0 link]
-      averageDelayL selectedLinks = sum (map delayL selectedLinks) / fromIntegral (length selectedLinks)
