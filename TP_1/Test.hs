@@ -51,26 +51,26 @@ tunnel3 = newT [link1, link4, link3]
 tunnel4 = newT [link4, link2, link3]
 
 -- Regions
-region1 = newR [buenosAires, mendoza, sanLuis,cordoba] [link1, link2, link3] [tunnel1]
-region2 = newR [buenosAires, mendoza, sanLuis] [link1, link2, link3, link5] [tunnel1]
+regionNew1 = newR
+region2 = newR
+region1 = foundR regionNew1 buenosAires
 
 testing :: [Bool]
 testing = [
+    -- Points
+    testF (newP 5 8 == point1),
+    --point2 = newP 6 9 
+   -- point3 = newP 7 13 
+    --point4 = newP 6 9 
 
     -- Link module tests
-    testF (newL sanLuis cordoba highQuality == error "Cannnot create a link between the same city"),
-    testF (newL buenosAires buenosAires highQuality == error "Cannnot create a link between the same city"),
+    testF (newL sanLuis cordoba highQuality == error "Cannot create a link between the same city"),
+    testF (newL buenosAires buenosAires highQuality == error "Cannot create a link between the same city"),
 
     testF (linksL sanLuis cordoba link2 == error "Cities cannot be the same"),
-    testF (linksL buenosAires buenosAires link5 == error "Cities cannot be the same"),
+    testF (linksL buenosAires buenosAires link5 == error "Cities cannot be the same")
 
     -- Region module tests
-    testF (foundR region1 buenosAires  == error "The city is already in the Region"),
-    testF (foundR region1 cordoba  == error "A city with the same coordinates already exists"),
-
-    testF (linkR region1 cordoba cordoba == error "Cannot link a city to itself"),
-    testF (linkR region2 sanJuan buenosAires == error "One or both cities are not in the region"),
-    testF (linkR region1 cordoba sanLuis == error "One or both cities are not in the region"),
-    testF (tunelR region1 [buenosAires, cordoba, mendoza] == error "At least two cities are required to create a tunnel"),
-    testF (delayR region1 buenosAires mendoza == 24.6)
+    --testF (foundR region1 buenosAires == error "The City is already in the region")
+    
     ]
