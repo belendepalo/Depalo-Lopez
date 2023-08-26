@@ -17,14 +17,14 @@ newR = Reg [] [] []
 foundR :: Region -> City -> Region
 foundR (Reg cities links tunnels) newCity
    | newCity `elem` cities = error "The City is already in the Region"
-   | any (`sameCoordinates` newCity) cities = error "A city with the same coordinates already exists"
+   | any (\city -> distanceC newCity city == 0) cities  = error "A city with the same coordinates already exists"
    | otherwise = Reg (newCity:cities) links tunnels
 
 linkR :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
 linkR (Reg cities links tunnels) c0 c1 quality
    | c0 == c1 = error "Cannot link a city to itself"
    | not (citiesInRegion c0 c1 cities)  = error "One or both cities are not in the region"
-   | sameCoordinates c0 c1 = error "Both cities cannot have the same coordinates"
+   | distanceC c0 c1 == 0 = error "Both cities cannot have the same coordinates"
    | otherwise = Reg cities (newL c0 c1 quality:links) tunnels
 
 tunelR :: Region -> [City] -> Region -- genera una comunicación entre dos ciudades distintas de la región
