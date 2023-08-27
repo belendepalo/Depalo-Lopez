@@ -66,16 +66,16 @@ citiesInRegion c0 c1 cities = (c0 `elem` cities) && (c1 `elem` cities)
 allCitiesConnected :: Region -> [City] -> Bool
 allCitiesConnected region@(Reg cities _ _) citiesToConnect =
    let startCity = head citiesToConnect
-       visited = dfs region [startCity] []
+       visited = depthFirstSearch region [startCity] []
    in all (`elem` visited) citiesToConnect
 
-dfs :: Region -> [City] -> [City] -> [City] -- búsqueda en profundidad, Depth-First Search, DFS en inglés
-dfs _ [] visited = visited
-dfs region@(Reg cities _ _) (current:stack) visited
-   | current `elem` visited = dfs region stack visited
+depthFirstSearch :: Region -> [City] -> [City] -> [City] -- búsqueda en profundidad, Depth-First Search, depthFirstSearch en inglés
+depthFirstSearch _ [] visited = visited
+depthFirstSearch region@(Reg cities _ _) (current:stack) visited
+   | current `elem` visited = depthFirstSearch region stack visited
    | otherwise =
       let neighbors = filter (\city -> city /= current && linkedR region city current && notElem city visited) cities
-      in dfs region (neighbors ++ stack) (current:visited)
+      in depthFirstSearch region (neighbors ++ stack) (current:visited)
 
 getLinksBetweenCities :: [City] -> [Link] -> [Link]
 getLinksBetweenCities citiesToConnect links = [link | link <- links, linksConnectingCities link]
