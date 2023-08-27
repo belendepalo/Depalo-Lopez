@@ -33,8 +33,8 @@ lowQuality = newQ "Low" 5 2.6
 -- Cities
 buenosAires = newC "Buenos Aires" point1
 cordoba = newC "Cordoba" point2
-mendoza = newC "Mendoza" point3 
-sanLuis = newC "San Luis" point4 
+mendoza = newC "Mendoza" point3
+sanLuis = newC "San Luis" point4
 sanJuan = newC "San Juan" point5
 
 -- Links
@@ -52,20 +52,19 @@ tunnel3 = newT [link1, link4, link3]
 tunnel4 = newT [link4, link2, link3]
 
 -- Regions
-regionNew1 = newR
-regionNew2 = newR
-region1 = foundR regionNew1 buenosAires
+emptyRegion = newR
+regionWithBuenosAires = foundR emptyRegion buenosAires
+regionWithBuenosAiresCordoba = foundR regionWithBuenosAires cordoba
+regionWithBuenosAiresCordobaMendoza = foundR regionWithBuenosAiresCordoba mendoza
+regionWithAllCities = foundR regionWithBuenosAiresCordobaMendoza sanJuan
+regionWithLink1 = linkR regionWithBuenosAiresCordoba buenosAires cordoba highQuality
+regionWithLinks1To3 = linkR (linkR (linkR regionWithAllCities buenosAires cordoba highQuality) cordoba mendoza lowQuality) mendoza sanJuan highQuality
+regionWithTunnel1 = tunelR regionWithLinks1To3 [buenosAires, sanJuan]
 
-region3 = foldl (\reg city -> foundR reg city) newR citiesToAdd
-  where citiesToAdd = [buenosAires, cordoba, mendoza, sanJuan]
 
-
-
-region2 = foundR regionNew2 mendoza
-
- 
 testing :: [Bool]
 testing = [
+ 
     -- Point
     newP 5 8 == point1,
     newP 6 9 == point2,
@@ -100,13 +99,13 @@ testing = [
 
     connectsL buenosAires link1,
 -- 19
-    not(linksL buenosAires mendoza link1),
+    not (linksL buenosAires mendoza link1),
     linksL buenosAires cordoba link1,
     linksL cordoba buenosAires link1,
     -- linksL mendoza mendoza link1 == error "Cities cannot be the same",
 
     capacityL link1 == 10,
-    
+
     delayL link1 == 14.424978,
 
     -- Tunel
@@ -114,23 +113,18 @@ testing = [
     --newT [link1, link2, link5] == error "Cannnot create a link with same coordinates",
 
     connectsT buenosAires sanJuan tunnel1,
-    not(connectsT buenosAires cordoba tunnel1),
+    not (connectsT buenosAires cordoba tunnel1),
 
     usesT link1 tunnel1,
-    not(usesT link4 tunnel1),
+    not (usesT link4 tunnel1),
 
     delayT tunnel1 == 61.921675,
 
-    -- Region
-    newR == regionNew1,
-    newR == regionNew2,
-
-    foundR regionNew1 buenosAires == region1,
-    foundR regionNew2 mendoza == region2,
-
-    --foundR region3 buenosAires == error "The City is already in the Region" 
-    --foundR region3 sanLuis == error "A city with the same coordinates already exists"
-    linkR 
-
+   -- Region tests
+    emptyRegion == newR,
+    regionWithBuenosAires == foundR newR buenosAires,
+    regionWithBuenosAiresCordoba == foundR regionWithBuenosAires cordoba,
+    regionWithLink1 == linkR regionWithBuenosAiresCordoba buenosAires cordoba highQuality,
+    regionWithTunnel1 == tunelR regionWithLinks1To3 [buenosAires, sanJuan]
     ]
 showResults = zipWith (\ i r -> "Test " ++ show i ++ ": " ++ show r) [1..] testing

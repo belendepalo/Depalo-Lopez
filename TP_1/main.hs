@@ -9,22 +9,10 @@ mkdir build/o_files
 mkdir build/hi_files
 -} 
 
-import Pruebas
+import Test
 
 main :: IO ()
 main = do
     putStrLn "Running tests..."
-    putStrLn testDistanceAtoB
-    putStrLn testDistanceBtoC
-    putStrLn testCityNameA
-    putStrLn testCityDistanceAtoB
-    putStrLn testQualityHighCapacity
-    putStrLn testQualityLowDelay
-    putStrLn testLinkABConnectsA
-    putStrLn testLinkABDoesNotConnectC
-    putStrLn testLinkABLinksAtoB
-    putStrLn testLinkABDelay
-    putStrLn testTunnelABConnectsAtoB
-    putStrLn testTunnelABDoesNotConnectAtoC
-    putStrLn testTunnelABUsesLinkABHigh
-    putStrLn testTunnelABDelay
+    
+
