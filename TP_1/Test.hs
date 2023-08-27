@@ -56,6 +56,11 @@ regionNew1 = newR
 regionNew2 = newR
 region1 = foundR regionNew1 buenosAires
 
+region3 = foldl (\reg city -> foundR reg city) newR citiesToAdd
+  where citiesToAdd = [buenosAires, cordoba, mendoza, sanJuan]
+
+
+
 region2 = foundR regionNew2 mendoza
 
  
@@ -121,15 +126,11 @@ testing = [
     newR == regionNew2,
 
     foundR regionNew1 buenosAires == region1,
-    foundR regionNew2 mendoza == region2
+    foundR regionNew2 mendoza == region2,
 
+    --foundR region3 buenosAires == error "The City is already in the Region" 
+    --foundR region3 sanLuis == error "A city with the same coordinates already exists"
+    linkR 
 
-
-
-
-
-    -- Region module tests
-    --testF (foundR region1 buenosAires == error "The City is already in the region")
-    
     ]
 showResults = zipWith (\ i r -> "Test " ++ show i ++ ": " ++ show r) [1..] testing
