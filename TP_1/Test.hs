@@ -53,9 +53,12 @@ tunnel4 = newT [link4, link2, link3]
 
 -- Regions
 regionNew1 = newR
-region2 = newR
+regionNew2 = newR
 region1 = foundR regionNew1 buenosAires
 
+region2 = foundR regionNew2 mendoza
+
+ 
 testing :: [Bool]
 testing = [
     -- Point
@@ -109,8 +112,16 @@ testing = [
     not(connectsT buenosAires cordoba tunnel1),
 
     usesT link1 tunnel1,
-    not(usesT link4 tunnel1)
+    not(usesT link4 tunnel1),
 
+    delayT tunnel1 == 61.921675,
+
+    -- Region
+    newR == regionNew1,
+    newR == regionNew2,
+
+    foundR regionNew1 buenosAires == region1,
+    foundR regionNew2 mendoza == region2
 
 
 
