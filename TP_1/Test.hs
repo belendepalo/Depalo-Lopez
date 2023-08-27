@@ -6,7 +6,7 @@ import City
 import Link
 import Tunel
 import Region
-import GHC.Exts.Heap (GenClosure(link))
+
 
 testF :: Show a => a -> Bool
 testF action = unsafePerformIO $ do
@@ -94,14 +94,12 @@ testing = [
 
     -- Tests para Enlace
     newL buenosAires cordoba highQuality == link1, -- Verifica creación de enlace
-    -- newL cordoba sanLuis highQuality == error "Cannnot create a link with same coordinates",
 
     connectsL buenosAires link1, -- Verifica si una ciudad se conecta con un enlace
 -- 19
     not (linksL buenosAires mendoza link1), -- Verifica si dos ciudades están enlazadas por un enlace
     linksL buenosAires cordoba link1, 
     linksL cordoba buenosAires link1, 
-    -- linksL mendoza mendoza link1 == error "Cities cannot be the same",
 
     capacityL link1 == 10, -- Verifica capacidad de enlace
 
@@ -109,7 +107,6 @@ testing = [
 
     -- Tests para Túnel
     newT [link1, link2, link3] == tunnel1, -- Verifica creación de túnel
-    --newT [link1, link2, link5] == error "Cannnot create a link with same coordinates",
 
     connectsT buenosAires sanJuan tunnel1, -- Verifica si dos ciudades están conectadas por un túnel
     not (connectsT buenosAires cordoba tunnel1), -- Verifica si dos ciudades no están conectadas por un túnel
@@ -126,6 +123,3 @@ testing = [
     regionWithLink1 == linkR regionWithBuenosAiresCordoba buenosAires cordoba highQuality, -- Verifica creación de enlace en región
     regionWithTunnel1 == tunelR regionWithLinks1To3 [buenosAires, sanJuan] -- Verifica creación de túnel en región
     ]
-
--- Función para mostrar resultados de las pruebas
-showResults = zipWith (\ i r -> "Test " ++ show i ++ ": " ++ show r) [1..] testing
