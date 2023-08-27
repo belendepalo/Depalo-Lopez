@@ -6,6 +6,7 @@ import City
 import Link
 import Tunel
 import Region
+import GHC.Exts.Heap (GenClosure(link))
 
 testF :: Show a => a -> Bool
 testF action = unsafePerformIO $ do
@@ -57,20 +58,57 @@ region1 = foundR regionNew1 buenosAires
 
 testing :: [Bool]
 testing = [
-    -- Points
-    testF (newP 5 8 == point1),
-    --point2 = newP 6 9 
-   -- point3 = newP 7 13 
-    --point4 = newP 6 9 
+    -- Point
+    newP 5 8 == point1,
+    newP 6 9 == point2,
+    newP 7 13 == point3,
+    newP 6 9 == point4,
 
-    -- Link module tests
-    testF (newL sanLuis cordoba highQuality == error "Cannot create a link between the same city"),
-    testF (newL buenosAires buenosAires highQuality == error "Cannot create a link between the same city"),
+    difP point1 point2 == 1.41421356237,
+    difP point2 point4 == 0.0,
 
-    testF (linksL sanLuis cordoba link2 == error "Cities cannot be the same"),
-    testF (linksL buenosAires buenosAires link5 == error "Cities cannot be the same")
+    -- Quality
+    newQ "High" 10 10.2 == highQuality,
+    newQ "Low" 5 2.6 == lowQuality,
+
+    capacityQ highQuality == 10,
+    capacityQ lowQuality == 5,
+
+    delayQ highQuality == 10.2,
+    delayQ lowQuality == 2.6,
+
+    -- City
+    newC "Buenos Aires" point1 == buenosAires,
+    newC "Mendoza" point3 == mendoza,
+
+    nameC buenosAires == "Buenos Aires",
+    nameC sanLuis == "San Luis",
+
+    distanceC buenosAires sanLuis == 1.41421356237,
+
+    -- Link
+    newL buenosAires cordoba highQuality == link1,
+    -- newL cordoba sanLuis highQuality == error "Cannnot create a link with same coordinates",
+
+    connectsL buenosAires link1,
+
+    not(linksL buenosAires mendoza link1),
+    linksL buenosAires cordoba link1,
+    linksL cordoba buenosAires link1,
+    -- linksL mendoza mendoza link1 == error "Cities cannot be the same",
+
+    capacityL link1 == 10,
+    
+
+
+
+
+
+
+
 
     -- Region module tests
     --testF (foundR region1 buenosAires == error "The City is already in the region")
     
     ]
+showResults = zipWith (\ i r -> "Test " ++ show i ++ ": " ++ show r) [1..] testing
