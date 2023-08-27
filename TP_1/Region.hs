@@ -49,7 +49,7 @@ delayR (Reg cities links tunnels) c0 c1
    where
       connectingTunnels = [tunnel | tunnel <- tunnels, connectsT c0 c1 tunnel || connectsT c1 c0 tunnel]
 
-availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
+availableCapacityForR :: Region -> City -> City -> Int 
 availableCapacityForR region@(Reg _ links tunnels) c0 c1
    | null linksConnectingCities = error "There are connection errors between the cities"
    | otherwise = capacityLink - capacityUsed region (head linksConnectingCities)
@@ -69,7 +69,7 @@ allCitiesConnected region@(Reg cities _ _) citiesToConnect =
        visited = depthFirstSearch region [startCity] []
    in all (`elem` visited) citiesToConnect
 
-depthFirstSearch :: Region -> [City] -> [City] -> [City] -- búsqueda en profundidad, Depth-First Search, depthFirstSearch en inglés
+depthFirstSearch :: Region -> [City] -> [City] -> [City] 
 depthFirstSearch _ [] visited = visited
 depthFirstSearch region@(Reg cities _ _) (current:stack) visited
    | current `elem` visited = depthFirstSearch region stack visited
