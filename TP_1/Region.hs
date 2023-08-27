@@ -74,7 +74,7 @@ dfs _ [] visited = visited
 dfs region@(Reg cities _ _) (current:stack) visited
    | current `elem` visited = dfs region stack visited
    | otherwise =
-      let neighbors = filter (\city -> linkedR region city current && notElem city visited) cities
+      let neighbors = filter (\city -> city /= current && linkedR region city current && notElem city visited) cities
       in dfs region (neighbors ++ stack) (current:visited)
 
 getLinksBetweenCities :: [City] -> [Link] -> [Link]
