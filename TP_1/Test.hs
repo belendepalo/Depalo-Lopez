@@ -40,7 +40,7 @@ sanJuan = newC "San Juan" point5
 -- Links
 link1 = newL buenosAires cordoba highQuality
 link2 = newL cordoba mendoza lowQuality
-link3 = newL mendoza cordoba highQuality
+link3 = newL mendoza sanJuan highQuality
 link4 = newL mendoza buenosAires lowQuality
 link5 = newL cordoba sanLuis lowQuality
 link6 = newL sanJuan buenosAires highQuality
@@ -91,7 +91,7 @@ testing = [
     -- newL cordoba sanLuis highQuality == error "Cannnot create a link with same coordinates",
 
     connectsL buenosAires link1,
-
+-- 19
     not(linksL buenosAires mendoza link1),
     linksL buenosAires cordoba link1,
     linksL cordoba buenosAires link1,
@@ -99,7 +99,17 @@ testing = [
 
     capacityL link1 == 10,
     
+    delayL link1 == 14.424978,
 
+    -- Tunel
+    newT [link1, link2, link3] == tunnel1,
+    --newT [link1, link2, link5] == error "Cannnot create a link with same coordinates",
+
+    connectsT buenosAires sanJuan tunnel1,
+    not(connectsT buenosAires cordoba tunnel1),
+
+    usesT link1 tunnel1,
+    not(usesT link4 tunnel1)
 
 
 

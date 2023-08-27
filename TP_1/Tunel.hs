@@ -13,7 +13,10 @@ newT :: [Link] -> Tunel
 newT = Tun
 
 connectsT :: City -> City -> Tunel -> Bool
-connectsT c1 c2 (Tun links) = any (\link -> (connectsL c1 link && connectsL c2 link) || (connectsL c2 link && connectsL c1 link)) links
+connectsT c0 c1 (Tun links) = (connectsL c0 firstLink && connectsL c1 lastLink) || (connectsL c1 firstLink && connectsL c0 lastLink) 
+   where
+      firstLink = head links
+      lastLink = last links
 
 usesT :: Link -> Tunel -> Bool  -- indica si este tunel atraviesa ese link
 usesT lin_0 (Tun links) = lin_0 `elem` links
