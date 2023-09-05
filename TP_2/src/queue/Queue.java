@@ -1,30 +1,34 @@
 package queue;
+import java.util.LinkedList;
 
 public class Queue {
-
-  public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return true;
+	public LinkedList<Object> queue = new LinkedList<>();
+	
+	public boolean isEmpty() {
+		return queue.isEmpty();
 	}
 
 	public Queue add( Object  cargo ) {
-		// TODO Auto-generated method stub
+		queue.add(cargo);
 		return this;
 	}
 
-	public Object take() {
-    // TODO Auto-generated method stub
-		return null;
-	}
+    public Object take() {
+        if (queue.isEmpty()) {
+            throw new Error("Queue is empty");
+        }
+        return queue.removeFirst();
+    }
 
-	public Object head() {
-		// TODO Auto-generated method stub
-    return null;
-	}
+    public Object head() {
+        if (queue.isEmpty()) {
+            throw new Error("Queue is empty");
+        }
+        return queue.getFirst();
+    }
 
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return queue.size();
 	}
 
 }
