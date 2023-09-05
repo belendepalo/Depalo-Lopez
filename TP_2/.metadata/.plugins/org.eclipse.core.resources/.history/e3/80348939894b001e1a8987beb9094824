@@ -1,0 +1,35 @@
+package queue;
+
+public class Queue {
+	
+  public List<Objects> elements = new List<>();
+  
+  public boolean isEmpty() {
+		return elements.isEmpty();	
+	}
+
+	public Queue add( Object  cargo ) {
+		elements.addLast(cargo);
+		return this;
+	}
+
+	public Object take() {
+      if (isEmpty()) {
+    	throw new RuntimeException("The queue is empty");
+      }
+		return elements.removeFirst();
+	}
+
+	public Object head() {
+	  if (isEmpty()) {
+		  throw new Error("Queue is empty");
+	  }
+	  return elements.getFirst();
+	}
+
+	public int size() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}
