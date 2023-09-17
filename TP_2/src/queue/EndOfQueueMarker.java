@@ -1,7 +1,7 @@
 package queue;
 
 public class EndOfQueueMarker extends QueueElementBase {
-	private static String EmptyQueue = "Queue is empty";
+	static String EmptyQueue = "Queue is empty";
 	
 	public boolean isEmpty() {
 		return true;

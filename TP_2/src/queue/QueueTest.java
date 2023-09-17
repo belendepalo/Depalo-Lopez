@@ -1,12 +1,15 @@
 package queue;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 public class QueueTest {
+	private String firstAddedObject = "First";
+	private String secondAddedObject = "Second";
+	private String something = "Something";
 
 	@Test
 	public void test01QueueShouldBeEmptyWhenCreated() {
@@ -15,17 +18,17 @@ public class QueueTest {
 
 	@Test
 	public void test02AddElementsToTheQueue() {
-		assertFalse(new Queue().add("Something").isEmpty());
+		assertFalse(newQueueWithSomething().isEmpty());
 	}
 
 	@Test
 	public void test03AddedElementsIsAtHead() {
-		assertEquals("Something", new Queue().add("Something").head());
+		assertEquals(something, newQueueWithSomething().head());
 	}
 
 	@Test
 	public void test04TakeRemovesElementsFromTheQueue() {
-		Queue queue = new Queue().add("Something");
+		Queue queue = newQueueWithSomething();
 		queue.take();
 
 		assertTrue(queue.isEmpty());
@@ -33,21 +36,12 @@ public class QueueTest {
 
 	@Test
 	public void test05TakeReturnsLastAddedObject() {
-		Queue queue = new Queue();
-		String addedObject = "Something";
-		queue.add(addedObject);
-
-		assertEquals(addedObject, queue.take());
+		assertEquals(something, newQueueWithSomething().take());
 	}
 
 	@Test
 	public void test06QueueBehavesFIFO() {
-		Queue queue = new Queue();
-		String firstAddedObject = "First";
-		String secondAddedObject = "Second";
-
-		queue.add(firstAddedObject);
-		queue.add(secondAddedObject);
+		Queue queue = newQueueWithFirstAndSecond();
 
 		assertEquals(queue.take(), firstAddedObject);
 		assertEquals(queue.take(), secondAddedObject);
@@ -56,19 +50,12 @@ public class QueueTest {
 
 	@Test
 	public void test07HeadReturnsFirstAddedObject() {
-		Queue queue = new Queue();
-		String firstAddedObject = "First";
-
-		queue.add(firstAddedObject);
-		queue.add("Second");
-
-		assertEquals(queue.head(), firstAddedObject);
+		assertEquals(newQueueWithFirstAndSecond().head(), firstAddedObject);
 	}
 
 	@Test
 	public void test08HeadDoesNotRemoveObjectFromQueue() {
-		Queue queue = new Queue();
-		queue.add("Something");
+		Queue queue = newQueueWithSomething();
 		assertEquals(1, queue.size());
 		queue.head();
 		assertEquals(1, queue.size());
@@ -76,41 +63,34 @@ public class QueueTest {
 
 	@Test
 	public void test09SizeRepresentsObjectInTheQueue() {
-		assertEquals(2, new Queue().add("First").add("Second").size());
+		assertEquals(2, newQueueWithFirstAndSecond().size());
 	}
 
 	@Test
 	public void test10CanNotTakeWhenThereAreNoObjectsInTheQueue() {
-		Queue queue = new Queue();
-		try {
-			queue.take();
-			fail("Expected Error was not thrown.");
-		} catch (Error e) {
-			assertTrue(e.getMessage().equals("Queue is empty"));
-		}
+		assertTrue(
+				assertThrows(Error.class, () -> new Queue().take()).getMessage().equals(EndOfQueueMarker.EmptyQueue));
 	}
 
 	@Test
 	public void test11CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() {
-		Queue queue = new Queue();
-		queue.add("Something");
+		Queue queue = newQueueWithSomething();
 		queue.take();
-		try {
-			queue.take();
-			fail("Expected Error was not thrown.");
-		} catch (Error e) {
-			assertTrue(e.getMessage().equals("Queue is empty"));
-		}
+
+		assertTrue(assertThrows(Error.class, () -> queue.take()).getMessage().equals(EndOfQueueMarker.EmptyQueue));
 	}
 
 	@Test
 	public void test12CanNotHeadWhenThereAreNoObjectsInTheQueue() {
-		Queue queue = new Queue();
-		try {
-			queue.head();
-			fail("Expected Error was not thrown.");
-		} catch (Error e) {
-			assertTrue(e.getMessage().equals("Queue is empty"));
-		}
+		assertTrue(
+				assertThrows(Error.class, () -> new Queue().head()).getMessage().equals(EndOfQueueMarker.EmptyQueue));
+	}
+
+	private Queue newQueueWithSomething() {
+		return new Queue().add(something);
+	}
+
+	private Queue newQueueWithFirstAndSecond() {
+		return new Queue().add(firstAddedObject).add(secondAddedObject);
 	}
 }
