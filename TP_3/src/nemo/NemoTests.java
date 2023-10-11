@@ -146,7 +146,7 @@ public class NemoTests {
 		nemo.executeCommands("ddddm");
 		Exception exception = assertThrows(RuntimeException.class, () -> nemo.executeCommand('m'));
 		assertEquals("Nemo has been destroyed.", exception.getMessage());
-		assertTrue(nemo.capsuleLaunched());
+		assertTrue(nemo.isCapsuleLaunched());
 	}
 
 	@Test
@@ -173,30 +173,24 @@ public class NemoTests {
 	@Test
 	public void test28_CapsuleReleaseStatus() {
 		nemo.executeCommand('m');
-		assertTrue(nemo.capsuleLaunched());
+		assertTrue(nemo.isCapsuleLaunched());
 	}
 
 	@Test
 	public void test29_MultipleCapsuleReleases() {
 		nemo.executeCommand('m');
 		nemo.executeCommand('m');
-		assertTrue(nemo.capsuleLaunched());
+		assertTrue(nemo.isCapsuleLaunched());
 	}
 
 	@Test
-	public void test30_InvalidCommand() {
-		Exception exception = assertThrows(RuntimeException.class, () -> nemo.executeCommand('z'));
-		assertEquals("Invalid command: z", exception.getMessage());
-	}
-
-	@Test
-	public void test31_RepeatedRotation() {
+	public void test30_RepeatedRotation() {
 		nemo.executeCommands("llll");
 		assertEquals(Orientation.NORTH, nemo.getCurrentDirection());
 	}
 
 	@Test
-	public void test32_MovementAtMaxDepth() {
+	public void test31_MovementAtMaxDepth() {
 		nemo.executeCommands("ddddddddddflfrfr");
 		assertEquals(-10, nemo.getDepth());
 		assertEquals(-1, nemo.getXPosition());
@@ -204,32 +198,32 @@ public class NemoTests {
 	}
 
 	@Test
-	public void test33_RepeatedDescend() {
+	public void test32_RepeatedDescend() {
 		nemo.executeCommands("dddddd");
 		assertEquals(-6, nemo.getDepth());
 	}
 
 	@Test
-	public void test34_RepeatedAscend() {
+	public void test33_RepeatedAscend() {
 		nemo.executeCommands("uuuuuu");
 		assertEquals(0, nemo.getDepth());
 	}
 
 	@Test
-	public void test35_MultipleCapsuleReleaseAtValidDepths() {
+	public void test34_MultipleCapsuleReleaseAtValidDepths() {
 		nemo.executeCommands("mdm");
 		assertFalse(nemo.isDestroyed());
 	}
 
 	@Test
-	public void test36_MoveInAllDirections() {
+	public void test35_MoveInAllDirections() {
 		nemo.executeCommands("frflf");
 		assertEquals(1, nemo.getXPosition());
 		assertEquals(2, nemo.getYPosition());
 	}
 
 	@Test
-	public void test37_ComplexSequence() {
+	public void test36_ComplexSequence() {
 		try {
 			nemo.executeCommands("ffrffudddmlff");
 		} catch (RuntimeException e) {
@@ -238,6 +232,6 @@ public class NemoTests {
 		assertEquals(2, nemo.getXPosition());
 		assertEquals(2, nemo.getYPosition());
 		assertEquals(-3, nemo.getDepth());
-		assertTrue(nemo.capsuleLaunched());
+		assertTrue(nemo.isCapsuleLaunched());
 	}
 }

@@ -32,7 +32,7 @@ public class Nemo {
 		return currentDirection;
 	}
 
-	public Boolean capsuleLaunched() {
+	public Boolean isCapsuleLaunched() {
 		return capsuleReleased;
 	}
 
@@ -69,8 +69,6 @@ public class Nemo {
 		case 'm':
 			releaseCapsule();
 			break;
-		default:
-			throw new RuntimeException("Invalid command: " + command);
 		}
 	}
 
