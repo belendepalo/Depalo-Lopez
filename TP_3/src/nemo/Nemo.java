@@ -85,16 +85,16 @@ public class Nemo {
 	private void moveForward() {
 		switch (currentDirection) {
 		case NORTH:
-			yPosition += 1;
+			this.yPosition += 1;
 			break;
 		case SOUTH:
-			yPosition -= 1;
+			this.yPosition -= 1;
 			break;
 		case EAST:
-			xPosition += 1;
+			this.xPosition += 1;
 			break;
 		case WEST:
-			xPosition -= 1;
+			this.xPosition -= 1;
 			break;
 		}
 	}
