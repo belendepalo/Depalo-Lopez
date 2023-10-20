@@ -11,7 +11,12 @@ public class Nemo {
 	private static List<Commands> commands = Arrays.asList(new MoveForward(), new RotateLeft(), new RotateRight(),
 			new Descend(), new Ascend(), new ReleaseCapsule());
 
-	public Nemo() {
+	public Depth getCurrentDepth() {
+		return currentDepth;
+	}
+
+	public CardinalDirection getDirection() {
+		return direction;
 	}
 
 	public void executeCommands(String commandString) {
@@ -22,4 +27,5 @@ public class Nemo {
 		commands.stream().filter(command -> command.canHandle(commandChar))
 				.forEach(command -> command.executeCommand(this));
 	}
+
 }

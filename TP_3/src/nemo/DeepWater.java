@@ -1,7 +1,7 @@
 package nemo;
 
 public class DeepWater extends Depth {
-	public static String nemoHasBeenDestroyed = "Nemo has been destroyed";
+	protected static final String nemoHasBeenDestroyed = "Nemo has been destroyed";
 	private Depth previousDepth;
 
 	public DeepWater(Depth prevDepth) {

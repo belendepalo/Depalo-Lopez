@@ -13,7 +13,7 @@ public class RotateLeft extends Commands {
 
 	@Override
 	public void executeCommand(Nemo nemo) {
-		nemo.direction = nemo.direction.turnLeft();
+		nemo.direction = nemo.getDirection().turnLeft();
 
 	}
 

@@ -13,7 +13,7 @@ public class MoveForward extends Commands {
 
 	@Override
 	public void executeCommand(Nemo nemo) {
-		nemo.coordinate = nemo.coordinate.updatePosition(nemo.direction.goForward());
+		nemo.coordinate = nemo.coordinate.updatePosition(nemo.getDirection().goForward());
 
 	}
 
