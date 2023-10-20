@@ -32,7 +32,7 @@ public class NemoTest {
 
 	@Test
 	public void test02_NemoAscendsOneUnit() {
-		executeCommandsAndTestCoordinates("u", 0, 0, 1);
+		executeCommandsAndTestCoordinates("du", 0, 0, 0);
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class NemoTest {
 		executeCommandAndTestDepths("m", new Surface());
 		assertTrue(nemo.getCurrentDepth().canReleaseCapsule());
 		executeCommandAndTestDepths("dm", new ShallowWater());
-		assertTrue(nemo.currentDepth.canReleaseCapsule());
+		assertTrue(nemo.getCurrentDepth().canReleaseCapsule());
 		assertThrowsLike(DeepWater.nemoHasBeenDestroyed, () -> nemo.executeCommands("dm"));	    
 	}
 

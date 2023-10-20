@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Nemo {
 
-	public Depth currentDepth = new Surface();
-	public CardinalDirection direction = new North();
+	protected Depth currentDepth = new Surface();
+	protected CardinalDirection direction = new North();
 	public Coordinates coordinate = new Coordinates(0, 0, 0);
 	private static List<Commands> commands = Arrays.asList(new MoveForward(), new RotateLeft(), new RotateRight(),
 			new Descend(), new Ascend(), new ReleaseCapsule());

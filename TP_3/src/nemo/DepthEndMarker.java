@@ -33,9 +33,6 @@ public class DepthEndMarker extends Depth {
 	}
 
 	@Override
-	public void canGoUp(Nemo nemo) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void canGoUp(Nemo nemo) {}
 
 }
