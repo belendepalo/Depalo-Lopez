@@ -1,7 +1,7 @@
 package nemo;
 
 public class DeepWater extends Depth {
-
+	public static String nemoHasBeenDestroyed = "Nemo has been destroyed";
 	private Depth previousDepth;
 
 	public DeepWater(Depth prevDepth) {
@@ -10,7 +10,7 @@ public class DeepWater extends Depth {
 
 	@Override
 	public boolean canReleaseCapsule() {
-		throw new RuntimeException("Nemo has been destroyed");
+		throw new RuntimeException(nemoHasBeenDestroyed);
 	}
 
 	@Override
