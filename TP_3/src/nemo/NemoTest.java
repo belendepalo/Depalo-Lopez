@@ -88,7 +88,7 @@ public class NemoTest {
 	@Test
 	public void test12_CannotReleaseCapsuleInDeepWater() {
 		executeCommandAndTestDepths("dddd", new DeepWater(null));
-		assertThrowsLike("Nemo has been destroyed", () -> nemo.executeCommands("m"));	    
+		assertThrowsLike(DeepWater.nemoHasBeenDestroyed, () -> nemo.executeCommands("m"));	    
 	}
 	
 	@Test
@@ -111,7 +111,7 @@ public class NemoTest {
 		executeCommandAndTestDepths("dm", new ShallowWater());
 		assertTrue(nemo.currentDepth.canReleaseCapsule());
 		
-		assertThrowsLike("Nemo has been destroyed", () -> nemo.executeCommands("dm"));	    
+		assertThrowsLike(DeepWater.nemoHasBeenDestroyed, () -> nemo.executeCommands("dm"));	    
 		
 	}
 	
