@@ -9,4 +9,6 @@ public abstract class Depth {
 	public abstract Depth descend();
 
 	public abstract Depth nextDepth();
+
+	public abstract void canGoUp(Nemo nemo);
 }
