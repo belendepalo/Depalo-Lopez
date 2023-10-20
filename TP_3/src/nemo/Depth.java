@@ -10,5 +10,5 @@ public abstract class Depth {
 
 	public abstract Depth nextDepth();
 
-	public abstract void canGoUp(Nemo nemo);
+	public abstract void ascendAndUpdateCoordinates(Nemo nemo);
 }

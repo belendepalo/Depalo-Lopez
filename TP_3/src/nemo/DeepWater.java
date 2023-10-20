@@ -1,6 +1,7 @@
 package nemo;
 
 public class DeepWater extends Depth {
+	
 	protected static final String nemoHasBeenDestroyed = "Nemo has been destroyed";
 	private Depth previousDepth;
 
@@ -28,9 +29,9 @@ public class DeepWater extends Depth {
 		return new DepthEndMarker(this);
 	}
 
-	public void canGoUp(Nemo nemo){
-		nemo.coordinate = nemo.coordinate.updatePosition(nemo.direction.goUp());
-		nemo.currentDepth = nemo.currentDepth.ascend();
+	public void ascendAndUpdateCoordinates(Nemo nemo){
+		nemo.coordinate = nemo.coordinate.updatePosition(nemo.getDirection().goUp());
+		nemo.currentDepth = nemo.getCurrentDepth().ascend();
 	}
 
 }

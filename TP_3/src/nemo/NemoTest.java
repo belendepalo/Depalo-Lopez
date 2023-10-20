@@ -32,7 +32,7 @@ public class NemoTest {
 
 	@Test
 	public void test02_NemoAscendsOneUnit() {
-		executeCommandsAndTestCoordinates("du", 0, 0, 0);
+		executeCommandsAndTestCoordinates("dddu", 0, 0, -2);
 	}
 
 	@Test

@@ -27,7 +27,7 @@ public class ShallowWater extends Depth {
 	public Depth nextDepth() {
 		return new DeepWater(this);
 	}
-	public void canGoUp(Nemo nemo){
+	public void ascendAndUpdateCoordinates(Nemo nemo){
 		nemo.coordinate = nemo.coordinate.updatePosition(nemo.direction.goUp());
 		nemo.currentDepth = nemo.currentDepth.ascend();
 	}

@@ -33,6 +33,9 @@ public class DepthEndMarker extends Depth {
 	}
 
 	@Override
-	public void canGoUp(Nemo nemo) {}
+	public void ascendAndUpdateCoordinates(Nemo nemo) {
+		nemo.coordinate = nemo.coordinate.updatePosition(nemo.getDirection().goUp());
+		nemo.currentDepth = this.ascend();
+	}
 
 }

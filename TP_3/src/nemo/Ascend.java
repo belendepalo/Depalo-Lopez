@@ -13,7 +13,7 @@ public class Ascend extends Commands {
 
 	@Override
 	public void executeCommand(Nemo nemo) {
-		nemo.currentDepth.canGoUp(nemo);
+		nemo.getCurrentDepth().ascendAndUpdateCoordinates(nemo);
 	}
 
 }
