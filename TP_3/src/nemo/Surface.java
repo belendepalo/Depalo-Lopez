@@ -22,4 +22,8 @@ public class Surface extends Depth {
 		return new ShallowWater();
 	}
 
+	public void canGoUp(Nemo nemo){
+		throw new RuntimeException("Nemo cannot fly");
+	}
+
 }
