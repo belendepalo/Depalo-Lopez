@@ -28,4 +28,9 @@ public class DeepWater extends Depth {
 		return new DepthEndMarker(this);
 	}
 
+	public void canGoUp(Nemo nemo){
+		nemo.coordinate = nemo.coordinate.updatePosition(nemo.direction.goUp());
+		nemo.currentDepth = nemo.currentDepth.ascend();
+	}
+
 }
