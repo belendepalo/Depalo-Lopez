@@ -20,7 +20,7 @@ public class NemoTests {
 		assertEquals(0, nemo.getXPosition());
 		assertEquals(0, nemo.getYPosition());
 		assertEquals(0, nemo.getDepth());
-		assertEquals(Orientation.NORTH, nemo.getCurrentDirection());
+		assertEquals("NORTH", nemo.getCurrentDirection());
 	}
 
 	@Test
@@ -46,13 +46,13 @@ public class NemoTests {
 	@Test
 	public void test05_RotateLeftFromNorth() {
 		nemo.executeCommand('l');
-		assertEquals(Orientation.WEST, nemo.getCurrentDirection());
+		assertEquals("WEST", nemo.getCurrentDirection());
 	}
 
 	@Test
 	public void test06_RotateRightFromNorth() {
 		nemo.executeCommand('r');
-		assertEquals(Orientation.EAST, nemo.getCurrentDirection());
+		assertEquals("EAST", nemo.getCurrentDirection());
 	}
 
 	@Test
@@ -122,7 +122,7 @@ public class NemoTests {
 		nemo.executeCommands("ddddm");
 		Exception exception = assertThrows(RuntimeException.class, () -> nemo.executeCommand('r'));
 		assertEquals("Nemo has been destroyed.", exception.getMessage());
-		assertEquals(Orientation.NORTH, nemo.getCurrentDirection());
+		assertEquals("NORTH", nemo.getCurrentDirection());
 	}
 
 	@Test
@@ -161,7 +161,7 @@ public class NemoTests {
 		nemo.executeCommands("ffrfflff");
 		assertEquals(2, nemo.getXPosition());
 		assertEquals(4, nemo.getYPosition());
-		assertEquals(Orientation.NORTH, nemo.getCurrentDirection());
+		assertEquals("NORTH", nemo.getCurrentDirection());
 	}
 
 	@Test
@@ -186,7 +186,7 @@ public class NemoTests {
 	@Test
 	public void test30_RepeatedRotation() {
 		nemo.executeCommands("llll");
-		assertEquals(Orientation.NORTH, nemo.getCurrentDirection());
+		assertEquals("NORTH", nemo.getCurrentDirection());
 	}
 
 	@Test
