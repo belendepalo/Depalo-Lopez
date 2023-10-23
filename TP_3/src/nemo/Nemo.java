@@ -20,7 +20,7 @@ public class Nemo {
 	}
 
 	public void executeCommands(String commandString) {
-		commandString.chars().mapToObj(c -> (char) c).forEach(this::executeCommand);
+		commandString.chars().mapToObj(charValue -> (char) charValue).forEach(this::executeCommand);
 	}
 
 	private void executeCommand(char commandChar) {
