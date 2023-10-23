@@ -67,7 +67,7 @@ public class NemoTest {
 	public void test08_DirectionIsConstantlyUpdated() {
 		executeCommandAndTestDirection("l", new West());
 		executeCommandAndTestDirection("l", new South());
-
+	}
 	@Test
 	public void test09_ExecuteMultipleSameCommands() {
 		executeCommandsAndTestCoordinates("ffffffff", 0, 8, 0);
