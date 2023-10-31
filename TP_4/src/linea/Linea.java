@@ -120,7 +120,7 @@ public class Linea {
 
 	private boolean checkDiagonalSequence(int rowStart, int colStart, int rowIncrement, int colIncrement, char chip) {
 
-//		Verifica una secuencia diagonal en una dirección dada.
+//		 Verifica una secuencia diagonal en una dirección dada.
 
 	    return IntStream.range(0, 4)
 	            .allMatch(step -> {
