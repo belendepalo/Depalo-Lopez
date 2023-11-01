@@ -71,17 +71,43 @@ public class LineaTest {
 	}
 	
 	@Test
-	public void test06_RedsAndBluesPlaysAreValid(){
+	public void test06_RedsTriesToPlayInAColumnThatIsNotInTheGame(){
+		Linea game = new Linea(7, 6, 'C');
+		try {
+	        game.playRedAt(0);
+	        fail("Se esperaba una excepción, pero no se lanzó.");
+	    } catch (RuntimeException e) {
+	        assertEquals("Index -1 out of bounds for length 7", e.getMessage());
+	    }
+	    
+	}
+	
+	@Test
+	public void test07_BluesTriesToPlayInAColumnThatIsNotInTheGame(){
+		Linea game = new Linea(7, 6, 'C');
+		try {
+	        game.playRedAt(0);
+	        fail("Se esperaba una excepción, pero no se lanzó.");
+	    } catch (RuntimeException e) {
+	        assertEquals("Index -1 out of bounds for length 7", e.getMessage());
+	    }
+	    
+	}
+	
+	@Test
+	public void test08_RedsAndBluesPlaysAreValidAndTheGameIsStillGoing(){
 		Linea game = new Linea(7, 6, 'C');
 		game.playRedAt(1);
 		game.playBlueAt(2);
 	    assertTrue(game.show().contains("R"));
 	    assertTrue(game.show().contains("B"));
+	    assertEquals("The game is still ongoing.", game.winner());
+	    
 	    
 	}
 	
 	@Test
-	public void test07_ErrorIsThrownAfterRedsTryToPlayWhenColumnIsFull(){
+	public void test09_ErrorIsThrownAfterRedsTryToPlayWhenColumnIsFull(){
 		Linea game = new Linea(7, 6, 'C');
 	    for (int i = 0; i < 3; i++) {
 	        game.playRedAt(3);
@@ -97,7 +123,7 @@ public class LineaTest {
 	}
 	
 	@Test
-	public void test08_RedWinsHorizontally(){
+	public void test10_RedWinsHorizontally(){
 		Linea game = new Linea(7, 6, 'C');
 		game.playRedAt(1);
 		game.playBlueAt(1);
@@ -107,25 +133,28 @@ public class LineaTest {
 		game.playBlueAt(1);
 		game.playRedAt(4);
 		assertTrue(game.finished());
+		assertEquals("Red is the winner!", game.winner());
 		    
 	}
 	
 	@Test
-	public void test09_RedWinsVertically(){
+	public void test11_BlueWinsVertically(){
 		Linea game = new Linea(7, 6, 'C');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(3);
-		game.playRedAt(1);
-		game.playBlueAt(4);
-		game.playRedAt(1);
+		game.playRedAt(2);
+		game.playBlueAt(1);
+		game.playRedAt(3);
+		game.playBlueAt(1);
+		game.playRedAt(4);
+		game.playBlueAt(1);
+		game.playRedAt(2);
+		game.playBlueAt(1);
 		assertTrue(game.finished());
+		assertEquals("Blue is the winner!", game.winner());
 		    
 	}
 	
 	@Test
-	public void test10_RedWinsInDiagonal(){
+	public void test12_RedWinsInDiagonal(){
 		Linea game = new Linea(7, 6, 'C');
 		game.playRedAt(1);
 		game.playBlueAt(2);
@@ -139,11 +168,12 @@ public class LineaTest {
 		game.playBlueAt(5);
 		game.playRedAt(4);
 		assertTrue(game.finished());
+		assertEquals("Red is the winner!", game.winner());
 		    
 	}
 	
 	@Test
-	public void test11_GameEndedInATie() {
+	public void test13_GameEndedInATie() {
 		Linea game = new Linea(3, 3, 'C');
 		game.playRedAt(1);
 		game.playBlueAt(1);
@@ -155,6 +185,6 @@ public class LineaTest {
 		game.playBlueAt(3);
 		game.playRedAt(3);
 		assertTrue(game.finished());
+		assertEquals("The game ended in a tie!", game.winner());
 	}
 }
-
