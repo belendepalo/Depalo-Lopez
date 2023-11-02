@@ -6,6 +6,7 @@ import java.util.List;
 public class Linea {
     private static final String ErrorItsRedsTurn = "It's Red's Turn!";
     private static final String ErrorItsBluesTurn = "It's Blue's Turn!";
+    private static final String ErrorColumnOutOfBounds = "Column out of bounds!";
     private List<List<Character>> board;
     private int width;
     private int height;
@@ -40,6 +41,9 @@ public class Linea {
     }
 
     public void playRedAt(int col) {
+        if (col < 1 || col > width) {
+            throw new RuntimeException(ErrorColumnOutOfBounds);
+        }
         if (turn == 'R') {
             placeChip(col - 1, 'R');
             turn = 'B';
@@ -49,6 +53,9 @@ public class Linea {
     }
 
     public void playBlueAt(int col) {
+        if (col < 1 || col > width) {
+            throw new RuntimeException(ErrorColumnOutOfBounds);
+        }
         if (turn == 'B') {
             placeChip(col - 1, 'B');
             turn = 'R';
