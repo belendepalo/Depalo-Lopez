@@ -77,7 +77,7 @@ public class LineaTest {
 	        game.playRedAt(0);
 	        fail("Se esperaba una excepción, pero no se lanzó.");
 	    } catch (RuntimeException e) {
-	        assertEquals("Index -1 out of bounds for length 7", e.getMessage());
+	        assertEquals("Column out of bounds!", e.getMessage());
 	    }
 	    
 	}
@@ -89,7 +89,7 @@ public class LineaTest {
 	        game.playRedAt(0);
 	        fail("Se esperaba una excepción, pero no se lanzó.");
 	    } catch (RuntimeException e) {
-	        assertEquals("Index -1 out of bounds for length 7", e.getMessage());
+	        assertEquals("Column out of bounds!", e.getMessage());
 	    }
 	    
 	}
