@@ -5,11 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.stream.IntStream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class LineaTest {
 
+	private static String ErrorItsRedsTurn = "It's Red's Turn!";
+	private static String ErrorItsBluesTurn = "It's Blue's Turn!";
 	private Linea game;
 
 	@BeforeEach
@@ -25,151 +29,158 @@ public class LineaTest {
 
 	@Test
 	public void test01_AfterRedPlaysIsBlueTurn() {
-		game.playRedAt(1);
+		playTurn(1, 'R');
 		assertFalse(game.isRedsTurn());
 		assertTrue(game.isBluesTurn());
-
 	}
 
 	@Test
 	public void test02_ErrorIsThrownAfterRedTriesToPlayTwice() {
-		game.playRedAt(1);
-		Exception exception = assertThrows(RuntimeException.class, () -> game.playRedAt(3));
-		assertEquals("It's Blue's Turn!", exception.getMessage());
+		playTurn(1, 'R');
+		playTurnExpectError(3, 'R', ErrorItsBluesTurn);
 	}
 
 	@Test
 	public void test03_ErrorIsThrownAfterBlueTriesToPlayTwice() {
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		Exception exception = assertThrows(RuntimeException.class, () -> game.playBlueAt(3));
-		assertEquals("It's Red's Turn!", exception.getMessage());
+		playTurn(1, 'R');
+		playTurn(2, 'B');
+		playTurnExpectError(3, 'B', ErrorItsRedsTurn);
 	}
 
 	@Test
 	public void test04_RedsPlayIsValid() {
-		game.playRedAt(1);
+		playTurn(1, 'R');
 		assertTrue(game.show().contains("R"));
-
 	}
 
 	@Test
 	public void test05_BluesPlayIsValid() {
-		game.playRedAt(1);
-		game.playBlueAt(2);
+		playTurn(1, 'R');
+		playTurn(2, 'B');
 		assertTrue(game.show().contains("B"));
-
 	}
 
 	@Test
 	public void test06_RedsTriesToPlayInAColumnThatIsNotInTheGame() {
-		Exception exception = assertThrows(RuntimeException.class, () -> game.playRedAt(0));
-		assertEquals("Column out of bounds!", exception.getMessage());
+		assertColumnOutOfBounds(0);
 	}
 
 	@Test
 	public void test07_BluesTriesToPlayInAColumnThatIsNotInTheGame() {
-		Exception exception = assertThrows(RuntimeException.class, () -> game.playBlueAt(0));
-		assertEquals("Column out of bounds!", exception.getMessage());
+		assertColumnOutOfBounds(8); 
 	}
 
 	@Test
 	public void test08_RedsAndBluesPlaysAreValidAndTheGameIsStillGoing() {
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		assertTrue(game.show().contains("R"));
-		assertTrue(game.show().contains("B"));
-		assertEquals("The game is still ongoing.", game.winner());
-
+		playTurn(1, 'R');
+		playTurn(2, 'B');
+		assertGameOngoing();
 	}
 
 	@Test
 	public void test09_ErrorIsThrownAfterRedsTryToPlayWhenColumnIsFull() {
-
-		for (int i = 0; i < 3; i++) {
-			game.playRedAt(3);
-			game.playBlueAt(3);
-		}
-		Exception exception = assertThrows(RuntimeException.class, () -> game.playRedAt(3));
-		assertEquals("Column is full!", exception.getMessage());
+		fillColumn(3, 6);
+		playTurnExpectError(3, 'R', "Column is full!");
 	}
 
 	@Test
 	public void test10_RedWinsHorizontally() {
-		game.playRedAt(1);
-		game.playBlueAt(1);
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		game.playRedAt(3);
-		game.playBlueAt(1);
-		game.playRedAt(4);
-		assertTrue(game.finished());
-		assertEquals("Red is the winner!", game.winner());
-
+		playTurn(1, 'R');
+		playTurn(1, 'B');
+		playTurn(2, 'R');
+		playTurn(1, 'B');
+		playTurn(3, 'R');
+		playTurn(1, 'B');
+		playTurn(4, 'R');
+		assertWinner("Red is the winner!");
 	}
 
 	@Test
 	public void test11_BlueWinsVertically() {
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		game.playRedAt(3);
-		game.playBlueAt(1);
-		game.playRedAt(4);
-		game.playBlueAt(1);
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		assertTrue(game.finished());
-		assertEquals("Blue is the winner!", game.winner());
-
+		playTurn(2, 'R');
+		playTurn(1, 'B');
+		playTurn(3, 'R');
+		playTurn(1, 'B');
+		playTurn(4, 'R');
+		playTurn(1, 'B');
+		playTurn(2, 'R');
+		playTurn(1, 'B');
+		assertWinner("Blue is the winner!");
 	}
 
 	@Test
 	public void test12_RedWinsInDiagonal() {
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(2);
-		game.playBlueAt(3);
-		game.playRedAt(3);
-		game.playBlueAt(4);
-		game.playRedAt(3);
-		game.playBlueAt(4);
-		game.playRedAt(4);
-		game.playBlueAt(5);
-		game.playRedAt(4);
-		assertTrue(game.finished());
-		assertEquals("Red is the winner!", game.winner());
-
+		playTurn(1, 'R');
+		playTurn(2, 'B');
+		playTurn(2, 'R');
+		playTurn(3, 'B');
+		playTurn(3, 'R');
+		playTurn(4, 'B');
+		playTurn(3, 'R');
+		playTurn(4, 'B');
+		playTurn(4, 'R');
+		playTurn(5, 'B');
+		playTurn(4, 'R');
+		assertWinner("Red is the winner!");
 	}
 
 	@Test
 	public void test13_GameEndedInATie() {
-		Linea game = new Linea(3, 3, 'C');
-		game.playRedAt(1);
-		game.playBlueAt(1);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(2);
-		game.playBlueAt(2);
-		game.playRedAt(3);
-		game.playBlueAt(3);
-		game.playRedAt(3);
-		assertTrue(game.finished());
-		assertEquals("The game ended in a tie!", game.winner());
-
+		game = new Linea(3, 3, 'C');
+		playTurn(1, 'R');
+		playTurn(1, 'B');
+		playTurn(1, 'R');
+		playTurn(2, 'B');
+		playTurn(2, 'R');
+		playTurn(2, 'B');
+		playTurn(3, 'R');
+		playTurn(3, 'B');
+		playTurn(3, 'R');
+		assertWinner("The game ended in a tie!");
 	}
 
 	@Test
 	public void test14_PlayAfterGameIsFinishedThrowsException() {
-		game.playRedAt(1);
-		game.playBlueAt(1);
-		game.playRedAt(2);
-		game.playBlueAt(2);
-		game.playRedAt(3);
-		game.playBlueAt(3);
-		game.playRedAt(4);
-
-		Exception exception = assertThrows(RuntimeException.class, () -> game.playRedAt(5));
-		assertEquals("Game is already finished!", exception.getMessage());
+		playTurn(1, 'R');
+		playTurn(1, 'B');
+		playTurn(2, 'R');
+		playTurn(2, 'B');
+		playTurn(3, 'R');
+		playTurn(3, 'B');
+		playTurn(4, 'R'); 
+		playTurnExpectError(5, 'R', "Game is already finished!");
 	}
 
+	private void playTurn(int column, char player) {
+		if (player == 'R') {
+			game.playRedAt(column);
+		} else {
+			game.playBlueAt(column);
+		}
+	}
+
+	private void playTurnExpectError(int column, char player, String expectedMessage) {
+		Exception exception = assertThrows(RuntimeException.class, () -> playTurn(column, player));
+		assertEquals(expectedMessage, exception.getMessage());
+	}
+
+	private void fillColumn(int column, int height) {
+		IntStream.range(0, height).forEach(i -> playTurn(column, i % 2 == 0 ? 'R' : 'B'));
+
+	}
+
+	private void assertWinner(String expectedWinner) {
+		assertTrue(game.finished());
+		assertEquals(expectedWinner, game.winner());
+	}
+
+	private void assertColumnOutOfBounds(int column) {
+		Exception exception = assertThrows(RuntimeException.class, () -> game.playRedAt(column));
+		assertEquals("Column out of bounds!", exception.getMessage());
+	}
+
+	private void assertGameOngoing() {
+		assertFalse(game.finished());
+		assertEquals("The game is still ongoing.", game.winner());
+	}
 }
