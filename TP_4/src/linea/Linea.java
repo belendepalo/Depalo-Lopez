@@ -96,6 +96,8 @@ public class Linea {
 			return "Blue is the winner!";
 		} else if (checkTie()) {
 			return "The game ended in a tie!";
+		} else if (finished()) {
+			throw new RuntimeException("Game is already finished!");
 		} else {
 			return "The game is still ongoing.";
 		}

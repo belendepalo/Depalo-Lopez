@@ -10,12 +10,13 @@ import org.junit.jupiter.api.Test;
 
 public class LineaTest {
 
-    private Linea game;
+	private Linea game;
 
-    @BeforeEach
-    public void setUp() {
-        game = new Linea(7, 6, 'C');
-    }
+	@BeforeEach
+	public void setUp() {
+		game = new Linea(7, 6, 'C');
+	}
+
 	@Test
 	public void test00_RedAlwaysStarts() {
 		assertTrue(game.isRedsTurn());
@@ -82,15 +83,16 @@ public class LineaTest {
 
 	}
 
-    @Test
-    public void test09_ErrorIsThrownAfterRedsTryToPlayWhenColumnIsFull() {
-        for (int i = 0; i < 3; i++) {
-            game.playRedAt(3);
-            game.playBlueAt(3);
-        }
-        Exception exception = assertThrows(RuntimeException.class, () -> game.playRedAt(3));
-        assertEquals("Column is full!", exception.getMessage());
-    }
+	@Test
+	public void test09_ErrorIsThrownAfterRedsTryToPlayWhenColumnIsFull() {
+
+		for (int i = 0; i < 3; i++) {
+			game.playRedAt(3);
+			game.playBlueAt(3);
+		}
+		Exception exception = assertThrows(RuntimeException.class, () -> game.playRedAt(3));
+		assertEquals("Column is full!", exception.getMessage());
+	}
 
 	@Test
 	public void test10_RedWinsHorizontally() {
@@ -141,6 +143,7 @@ public class LineaTest {
 
 	@Test
 	public void test13_GameEndedInATie() {
+		Linea game = new Linea(3, 3, 'C');
 		game.playRedAt(1);
 		game.playBlueAt(1);
 		game.playRedAt(1);
@@ -154,4 +157,19 @@ public class LineaTest {
 		assertEquals("The game ended in a tie!", game.winner());
 
 	}
+
+	@Test
+	public void test14_PlayAfterGameIsFinishedThrowsException() {
+		game.playRedAt(1);
+		game.playBlueAt(1);
+		game.playRedAt(2);
+		game.playBlueAt(2);
+		game.playRedAt(3);
+		game.playBlueAt(3);
+		game.playRedAt(4);
+
+		Exception exception = assertThrows(RuntimeException.class, () -> game.playRedAt(5));
+		assertEquals("Game is already finished!", exception.getMessage());
+	}
+
 }
