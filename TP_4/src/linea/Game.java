@@ -14,7 +14,7 @@ public class Game {
 				System.out.println(game.show());
 			}
 		}
-		System.out.println(game.winner());
+//		System.out.println(game.winner());
 	}
 
 	private static int prompt(String message) {

@@ -26,6 +26,7 @@ public class Linea {
 			throw new RuntimeException(ERROR_COLUMN_OUT_OF_BOUNDS);
 		}
 		gameStatus.playRedAt(col, this.board);
+		gameStatus = gameStatus.checkAndUpdateGameState(this.board);
 	}
 
 	public void playBlueAt(int col) {
@@ -33,6 +34,7 @@ public class Linea {
 			throw new RuntimeException(ERROR_COLUMN_OUT_OF_BOUNDS);
 		}
 		gameStatus.playBlueAt(col, this.board);
+		gameStatus = gameStatus.checkAndUpdateGameState(this.board);
 	}
 
 	public String show() {

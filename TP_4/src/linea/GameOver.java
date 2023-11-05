@@ -21,7 +21,12 @@ public class GameOver extends GameStatus {
 
 	@Override
 	public boolean finished(List<List<Character>> board) {
-		throw new RuntimeException(ERROR_GAME_OVER);
+		return true;
+	}
+
+	@Override
+	public GameStatus checkAndUpdateGameState(List<List<Character>> board) {
+		return this;
 	}
 
 }

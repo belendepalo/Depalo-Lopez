@@ -186,4 +186,24 @@ public class LineaTest {
 		assertTrue(game.finished());
 		assertEquals("The game ended in a tie!", game.winner());
 	}
+	
+	@Test
+	public void test14_GameEndedButRedTriesToPlay() {
+		Linea game = new Linea(7, 6, 'C');
+		game.playRedAt(2);
+		game.playBlueAt(1);
+		game.playRedAt(3);
+		game.playBlueAt(1);
+		game.playRedAt(4);
+		game.playBlueAt(1);
+		game.playRedAt(2);
+		game.playBlueAt(1);
+		assertTrue(game.finished());
+		try {
+	        game.playRedAt(3);
+	        fail("Se esperaba una excepción, pero no se lanzó.");
+	    } catch (RuntimeException e) {
+	        assertEquals("Game Over!", e.getMessage());
+	    }
+	}
 }

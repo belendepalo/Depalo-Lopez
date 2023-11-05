@@ -42,5 +42,14 @@ public class OngoingGame extends GameStatus {
 				|| winVariant.checkTie(board);
 
 	}
+	
+    @Override
+    public GameStatus checkAndUpdateGameState(List<List<Character>> board) {
+        if (finished(board)) {
+            return new GameOver(); 
+        }
+        return this; 
+    }
+
 
 }
