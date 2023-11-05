@@ -46,7 +46,7 @@ public class Linea {
 	}
 
 	private boolean isColumnOutOfBounds(int col) {
-		return col < 0 || col >= width;
+		return col < 1 || col > width;
 	}
 
 	private void initializeBoard() {
@@ -67,6 +67,6 @@ public class Linea {
 		return variants.stream()
 				.filter(variant -> variant.canHandle(winVariantChar))
 				.findFirst()
-				.orElseThrow(() -> new RuntimeException("Variable de juego invalida."));
+				.orElseThrow(() -> new RuntimeException("Invalid game type variable."));
 	}
 }
