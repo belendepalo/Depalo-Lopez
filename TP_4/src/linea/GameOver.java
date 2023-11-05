@@ -1,19 +1,27 @@
 package linea;
 
+import java.util.List;
+
 public class GameOver extends GameStatus {
 
-	private static String ErrorGameOver = "Game is already finished!";
-
 	@Override
-	public void playBlueAt(int col) {
-		throw new RuntimeException(ErrorGameOver);
-
+	public void playRedAt(int col, List<List<Character>> board) {
+		throw new RuntimeException(ERROR_GAME_OVER);
 	}
 
 	@Override
-	public void playRedAt(int col) {
-		throw new RuntimeException(ErrorGameOver);
+	public void playBlueAt(int col, List<List<Character>> board) {
+		throw new RuntimeException(ERROR_GAME_OVER);
+	}
 
+	@Override
+	public String show(List<List<Character>> board) {
+		throw new RuntimeException(ERROR_GAME_OVER);
+	}
+
+	@Override
+	public boolean finished(List<List<Character>> board) {
+		throw new RuntimeException(ERROR_GAME_OVER);
 	}
 
 }

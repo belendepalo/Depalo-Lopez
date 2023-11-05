@@ -1,28 +1,21 @@
 package linea;
+
 import java.util.List;
 
-public class RedsTurn extends GameStatus{
+class RedsTurn extends Turns {
+
 	@Override
-	public void playBlueAt(int col, List<List<Character>> board) {
-	    throw new RuntimeException(ErrorItsRedsTurn);
+	public void playRedAt(int col, List<List<Character>> board) {
+		placeChip(col, board, RED_CHIP);
 	}
 
-    @Override
-    public void playRedAt(int col, List<List<Character>> board) {
-        // Verificar si la columna está llena
-        if (board.get(0).get(col - 1) != ' ') {
-            throw new RuntimeException("Column is full!");
-        }
+	@Override
+	public void playBlueAt(int col, List<List<Character>> board) {
+		throw new RuntimeException(ERROR_ITS_REDS_TURN);
+	}
 
-        // Colocar la ficha 'B' en la posición correspondiente
-        for (int rowIndex = board.size() - 1; rowIndex >= 0; rowIndex--) {
-            if (board.get(rowIndex).get(col - 1) == ' ') {
-                board.get(rowIndex).set(col - 1, 'R');
-                return;
-            }
-        }
-    }
-		
-	
-
+	@Override
+	public Turns nextTurn() {
+		return new BluesTurn();
+	}
 }
