@@ -2,27 +2,29 @@ package linea;
 
 import java.util.List;
 
-public class GameOver extends GameStatus {
+public class GameOver extends GameStatus{
+
+	private static String ErrorGameOver = "Game Over!";
 
 	@Override
-	public void playRedAt(int col, List<List<Character>> board) {
-		throw new RuntimeException(ERROR_GAME_OVER);
-	}
+    public void playBlueAt(int col, List<List<Character>> board) {
+        throw new RuntimeException(ErrorGameOver);
+    }
 
-	@Override
-	public void playBlueAt(int col, List<List<Character>> board) {
-		throw new RuntimeException(ERROR_GAME_OVER);
-	}
-
-	@Override
-	public String show(List<List<Character>> board) {
-		throw new RuntimeException(ERROR_GAME_OVER);
-	}
-
-	@Override
-	public boolean finished(List<List<Character>> board) {
-		return true;
-	}
+    @Override
+    public void playRedAt(int col, List<List<Character>> board) {
+        throw new RuntimeException(ErrorGameOver);
+    }
+    
+    @Override
+    public boolean isRedsTurn() {
+    	throw new RuntimeException(ErrorGameOver);
+    }
+    
+    @Override
+    public boolean isBluesTurn() {
+    	throw new RuntimeException(ErrorGameOver);
+    }
 
 	@Override
 	public GameStatus checkAndUpdateGameState(List<List<Character>> board) {
@@ -30,3 +32,4 @@ public class GameOver extends GameStatus {
 	}
 
 }
+
