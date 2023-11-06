@@ -1,21 +1,22 @@
 package linea;
-
 import java.util.List;
+import java.util.stream.IntStream;
 
-class RedsTurn extends Turns {
-
+public class RedsTurn extends Turns{
 	@Override
-	public void playRedAt(int col, List<List<Character>> board) {
-		placeChip(col, board, RED_CHIP);
+	public void playBlue(int col, List<List<Character>> board) {
+	    throw new RuntimeException(ErrorItsRedsTurn);
 	}
 
-	@Override
-	public void playBlueAt(int col, List<List<Character>> board) {
-		throw new RuntimeException(ERROR_ITS_REDS_TURN);
-	}
+    @Override
+    public void playRed(int col, List<List<Character>> board) {
 
-	@Override
-	public Turns nextTurn() {
-		return new BluesTurn();
-	}
+        // Colocar la ficha 'B' en la posición correspondiente
+    	 IntStream.rangeClosed(0, board.size() - 1)
+         .filter(rowIndex -> board.get(board.size() - 1 - rowIndex).get(col - 1) == ' ')
+         .findFirst()
+         .ifPresent(rowIndex -> board.get(board.size() - 1 - rowIndex).set(col - 1, 'R'));
+		
+    }
+
 }
