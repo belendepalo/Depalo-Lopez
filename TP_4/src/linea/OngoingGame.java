@@ -2,54 +2,47 @@ package linea;
 
 import java.util.List;
 
-public class OngoingGame extends GameStatus {
-
-	private Turns currentTurn;
-	private WinningVariants winVariant;
-
-	public OngoingGame(Turns initialTurn, WinningVariants initialWinVariant) {
-		this.currentTurn = initialTurn;
-		this.winVariant = initialWinVariant;
-	}
-
-	@Override
-	public void playRedAt(int col, List<List<Character>> board) {
-		currentTurn.playRedAt(col, board);
-		currentTurn = currentTurn.nextTurn();
+public class OnGoingGame extends GameStatus{
+	
+	public Turns currentTurn;
+	
+	public OnGoingGame(Turns initialTurn, char winVariant){	
+		this.currentTurn = initialTurn;		
+		initializeWinningVariant(winVariant);		
 	}
 
 	@Override
 	public void playBlueAt(int col, List<List<Character>> board) {
-		currentTurn.playBlueAt(col, board);
-		currentTurn = currentTurn.nextTurn();
+		currentTurn.playBlue( col, board);
+		this.currentTurn = new RedsTurn();
+		
 	}
 
 	@Override
-	public String show(List<List<Character>> board) {
-		StringBuilder boardStr = new StringBuilder();
-		for (List<Character> row : board) {
-			for (char cell : row) {
-				boardStr.append("|").append(cell);
-			}
-			boardStr.append("|\n");
-		}
-		return boardStr.toString();
-	}
-
-	@Override
-	public boolean finished(List<List<Character>> board) {
-		return winVariant.checkWin(RED_CHIP, board) || winVariant.checkWin(BLUE_CHIP, board)
-				|| winVariant.checkTie(board);
-
+	public void playRedAt(int col, List<List<Character>> board) {
+		currentTurn.playRed(col, board);
+		this.currentTurn = new BluesTurn();
+		
 	}
 	
-    @Override
+	@Override
+	public boolean isRedsTurn() {
+        return currentTurn instanceof RedsTurn;
+    }
+
+	@Override
+    public boolean isBluesTurn() {
+        return currentTurn instanceof BluesTurn;
+    }
+	
+	@Override
     public GameStatus checkAndUpdateGameState(List<List<Character>> board) {
-        if (finished(board)) {
-            return new GameOver(); 
+		if (finished(board)) {
+	        GameOver gameOver = new GameOver();
+	        gameOver.winVariants = this.winVariants;
+	        return gameOver;
         }
         return this; 
     }
-
-
+	
 }
