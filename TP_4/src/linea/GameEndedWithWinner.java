@@ -23,4 +23,10 @@ public class GameEndedWithWinner extends GameStatus{
 		return "You won the game!";
 	}
 
+	@Override
+	public GameStatus changeOfTurnsWhilePlaying() {
+		return this;
+	}
+
+
 }
