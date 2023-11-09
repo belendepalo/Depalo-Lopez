@@ -1,22 +1,25 @@
 package linea;
-import java.util.List;
-import java.util.stream.IntStream;
 
-public class RedsTurn extends Turns{
+public class RedsTurn extends GameStatus{
+
 	@Override
-	public void playBlue(int col, List<List<Character>> board) {
-	    throw new RuntimeException(ErrorItsRedsTurn);
+	public void playRedAt(LineGame game, int column) {
+		game.placeChip('R', column);		
 	}
 
-    @Override
-    public void playRed(int col, List<List<Character>> board) {
+	@Override
+	public void playBlueAt(LineGame game, int column) {
+		throw new RuntimeException("It's Red's Turn!");		
+	}
 
-        // Colocar la ficha 'B' en la posición correspondiente
-    	 IntStream.rangeClosed(0, board.size() - 1)
-         .filter(rowIndex -> board.get(board.size() - 1 - rowIndex).get(col - 1) == ' ')
-         .findFirst()
-         .ifPresent(rowIndex -> board.get(board.size() - 1 - rowIndex).set(col - 1, 'R'));
-		
-    }
+	@Override
+	public boolean finished() {
+		return false;
+	}
 
+	@Override
+	public String StatusOfGame() {
+		return "The game is still ongoing.";
+	}
+	
 }
