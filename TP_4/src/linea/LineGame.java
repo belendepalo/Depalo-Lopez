@@ -210,10 +210,8 @@ public class LineGame {
 	        gameStatus = new GameEndedWithWinner();
 	    } else if (checkTie()) {
 	        gameStatus = new GameEndedInTie();
-	    } else if (gameStatus instanceof RedsTurn) {
-	        gameStatus = new BluesTurn();
 	    } else {
-	        gameStatus = new RedsTurn();
+	    	gameStatus = gameStatus.changeOfTurnsWhilePlaying();
 	    }
 	}
 	
