@@ -21,5 +21,10 @@ public class BluesTurn extends GameStatus{
 	public String StatusOfGame() {
 		return "The game is still ongoing.";
 	}
+
+	@Override
+	public GameStatus changeOfTurnsWhilePlaying() {
+		return new RedsTurn();
+	}
 	
 }
