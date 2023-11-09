@@ -1,6 +1,6 @@
 package linea;
 
-public abstract class GameStatus {
+public abstract class GameState {
 
 	public abstract void playRedAt(LineGame game, int column);
 

@@ -1,6 +1,6 @@
 package linea;
 
-public class GameEndedWithWinner extends GameStatus {
+public class GameEndedWithWinner extends GameState {
 
 	@Override
 	public void playRedAt(LineGame game, int column) {

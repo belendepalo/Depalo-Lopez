@@ -14,7 +14,7 @@ public class LineGame {
 	private GameStateManager gameStateManager;
 	private GameContext gameContext;
 	private List<List<Character>> board = new ArrayList<>();
-	public GameStatus gameStatus = new RedsTurn();
+	public GameState gameStatus = new RedsTurn();
 	private List<WinVariants> winningVariantsList = Arrays.asList(new WinVariantA(), new WinVariantB(), new WinVariantC());
 	private WinVariants winVariants;
 

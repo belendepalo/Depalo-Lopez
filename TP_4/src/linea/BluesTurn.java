@@ -1,6 +1,6 @@
 package linea;
 
-public class BluesTurn extends GameStatus {
+public class BluesTurn extends GameState {
 
 	@Override
 	public void playRedAt(LineGame game, int column) {
