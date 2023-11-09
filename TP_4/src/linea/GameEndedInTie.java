@@ -22,4 +22,10 @@ public class GameEndedInTie extends GameStatus{
 		return "The game ended in a tie!";
 	}
 
+	@Override
+	public GameStatus changeOfTurnsWhilePlaying() {
+		return this;
+	}
+
+
 }
