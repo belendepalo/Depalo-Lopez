@@ -44,7 +44,6 @@ public class LineGame {
 		gameStatus.playBlueAt(this, column - 1);
 		updateGameStatus('B');
 
-
 	}
 
 	private void initializeBaseOfBoard() {
@@ -195,10 +194,9 @@ public class LineGame {
 	// FUNCION EXTRA
 
 	private void initializeWinningVariant(char winVariant) {
-	    winVariants = winningVariantsList.stream()
-	                                     .filter(variant -> variant.canHandle(winVariant))
-	                                     .findFirst()
-	                                     .orElseThrow(() -> new RuntimeException("No variant can handle the provided winVariant character: " + winVariant));
+		winVariants = winningVariantsList.stream().filter(variant -> variant.canHandle(winVariant)).findFirst()
+										 .orElseThrow(() -> new RuntimeException(
+												 	"No variant can handle the provided winVariant character: " + winVariant));
 	}
 
 	private void updateGameStatus(char playedChip) {
