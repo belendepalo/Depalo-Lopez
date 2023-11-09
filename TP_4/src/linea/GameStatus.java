@@ -6,6 +6,8 @@ public abstract class GameStatus {
 	public abstract void playBlueAt(LineGame game, int column);
 	public abstract boolean finished();
 	public abstract String StatusOfGame();
+	public abstract GameStatus changeOfTurnsWhilePlaying();
+
 
 }
 
