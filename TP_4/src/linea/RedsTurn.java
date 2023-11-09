@@ -2,10 +2,10 @@ package linea;
 
 public class RedsTurn extends GameStatus{
 
-	@Override
-	public void playRedAt(LineGame game, int column) {
-		game.placeChip('R', column);		
-	}
+    @Override
+    public void playRedAt(LineGame game, int column) {
+		game.placeChip('R', column);
+    }
 
 	@Override
 	public void playBlueAt(LineGame game, int column) {
@@ -18,13 +18,13 @@ public class RedsTurn extends GameStatus{
 	}
 
 	@Override
-	public String StatusOfGame() {
+	public String statusOfGame() {
 		return "The game is still ongoing.";
 	}
 
 	@Override
-	public GameStatus changeOfTurnsWhilePlaying() {
-		return new BluesTurn();
+	public boolean canHandle(GameContext context) {
+		return context.isRedTurn() && !context.hasWinner() && !context.isTie();
 	}
 	
 }

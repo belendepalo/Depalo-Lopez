@@ -1,16 +1,16 @@
 package linea;
 
-public class GameEndedWithWinner extends GameStatus{
+public class GameEndedWithWinner extends GameStatus {
 
 	@Override
 	public void playRedAt(LineGame game, int column) {
-		throw new RuntimeException("Game Over!");		
-		
+		throw new RuntimeException("Game Over!");
+
 	}
 
 	@Override
 	public void playBlueAt(LineGame game, int column) {
-		throw new RuntimeException("Game Over!");			
+		throw new RuntimeException("Game Over!");
 	}
 
 	@Override
@@ -19,14 +19,13 @@ public class GameEndedWithWinner extends GameStatus{
 	}
 
 	@Override
-	public String StatusOfGame() {
+	public String statusOfGame() {
 		return "You won the game!";
 	}
 
 	@Override
-	public GameStatus changeOfTurnsWhilePlaying() {
-		return this;
+	public boolean canHandle(GameContext context) {
+		return context.hasWinner();
 	}
-
 
 }
