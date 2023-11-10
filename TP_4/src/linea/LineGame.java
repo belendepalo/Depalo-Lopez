@@ -10,22 +10,20 @@ public class LineGame {
 	private static final String ErrorFullColumn = "Column is full!";
 	private static final String ErrorColumnOutOfBounds = "Column is out of parameter!";
 	private static final String ErrorGameVariantNotFound = "No game variant can handle the provided winVariant character: ";
-	private int width;
-	private int height;
-	private GameStateManager gameStateManager;
-	private GameContext gameContext;
+	private List<WinVariants> winningVariantsList = Arrays.asList(new WinVariantA(), new WinVariantB(), new WinVariantC());
 	private List<List<Character>> board = new ArrayList<>();
 	private GameState gameStatus = new RedsTurn();
-	private List<WinVariants> winningVariantsList = Arrays.asList(new WinVariantA(), new WinVariantB(), new WinVariantC());
+	private GameStateManager gameContext;
 	private WinVariants winVariants;
+	private int height;
+	private int width;
 
 	public LineGame(int width, int height, char winVariant) {
 		this.width = width;
 		this.height = height;
 		initializeBaseOfBoard();
 		initializeWinningVariant(winVariant);
-		this.gameStateManager = new GameStateManager();
-		this.gameContext = new GameContext('R');
+		this.gameContext = new GameStateManager('R');
 	}
 
 	public boolean isRedsTurn() {
@@ -89,7 +87,7 @@ public class LineGame {
 	}
 
 	public String winner() {
-		return gameStatus.statusOfGame();
+		return gameStatus.statusOfGame(gameContext);
 	}
 
 	public boolean finished() {
@@ -204,7 +202,7 @@ public class LineGame {
 		gameContext.updateContextAfterPlay(playedChip);
 		gameContext.setWinner(checkWin(playedChip));
 		gameContext.setTie(checkTie());
-		gameStatus = gameStateManager.getNextState(gameContext);
+		gameStatus = gameContext.getNextState(gameContext);
 	}
 
 }

@@ -18,13 +18,13 @@ public class BluesTurn extends GameState {
 	}
 
 	@Override
-	public String statusOfGame() {
+	public String statusOfGame(GameStateManager stateManager) {
 		return "The game is still ongoing.";
 	}
 
 	@Override
-	public boolean canHandle(GameContext context) {
-		return !context.isRedTurn() && !context.hasWinner() && !context.isTie();
+	public boolean canHandle(GameStateManager stateManager) {
+		return !stateManager.isRedTurn() && !stateManager.hasWinner() && !stateManager.isTie();
 	}
 
 }

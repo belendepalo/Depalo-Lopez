@@ -135,7 +135,7 @@ public class LineGameTest {
 		game.playBlueAt(1);
 		game.playRedAt(4);
 		assertTrue(game.finished());
-		assertEquals("You won the game!", game.winner());
+		assertEquals("R has won the game!", game.winner());
 
 	}
 
@@ -151,7 +151,7 @@ public class LineGameTest {
 		game.playRedAt(2);
 		game.playBlueAt(1);
 		assertTrue(game.finished());
-		assertEquals("You won the game!", game.winner());
+		assertEquals("B has won the game!", game.winner());
 
 	}
 
@@ -170,7 +170,7 @@ public class LineGameTest {
 		game.playBlueAt(6);
 		game.playRedAt(4);
 		assertTrue(game.finished());
-		assertEquals("You won the game!", game.winner());
+		assertEquals("R has won the game!", game.winner());
 
 	}
 
@@ -185,7 +185,7 @@ public class LineGameTest {
 		game.playBlueAt(1);
 		game.playRedAt(4);
 		assertTrue(game.finished());
-		assertEquals("You won the game!", game.winner());
+		assertEquals("R has won the game!", game.winner());
 
 	}
 
@@ -201,7 +201,7 @@ public class LineGameTest {
 		game.playRedAt(2);
 		game.playBlueAt(1);
 		assertTrue(game.finished());
-		assertEquals("You won the game!", game.winner());
+		assertEquals("B has won the game!", game.winner());
 
 	}
 
@@ -220,7 +220,7 @@ public class LineGameTest {
 		game.playBlueAt(6);
 		game.playRedAt(4);
 		assertTrue(game.finished());
-		assertEquals("You won the game!", game.winner());
+		assertEquals("R has won the game!", game.winner());
 
 	}
 
@@ -237,7 +237,7 @@ public class LineGameTest {
 		game.playBlueAt(3);
 		game.playRedAt(3);
 		assertTrue(game.finished());
-		// assertEquals("The game ended in a tie!", game.winner());
+		 assertEquals("The game ended in a tie!", game.winner());
 	}
 
 	@Test

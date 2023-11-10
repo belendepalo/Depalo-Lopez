@@ -18,13 +18,13 @@ public class GameEndedInTie extends GameState {
 	}
 
 	@Override
-	public String statusOfGame() {
+	public String statusOfGame(GameStateManager stateManager) {
 		return "The game ended in a tie!";
 	}
 
 	@Override
-	public boolean canHandle(GameContext context) {
-		return context.isTie() && !context.hasWinner();
+	public boolean canHandle(GameStateManager stateManager) {
+		return stateManager.isTie() && !stateManager.hasWinner();
 	}
 
 }

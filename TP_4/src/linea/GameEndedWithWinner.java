@@ -19,13 +19,13 @@ public class GameEndedWithWinner extends GameState {
 	}
 
 	@Override
-	public String statusOfGame() {
-		return "You won the game!";
+	public String statusOfGame(GameStateManager stateManager) {
+		return stateManager.getLastPlayedChip() + " has won the game!";
 	}
 
 	@Override
-	public boolean canHandle(GameContext context) {
-		return context.hasWinner();
+	public boolean canHandle(GameStateManager stateManager) {
+		return stateManager.hasWinner();
 	}
 
 }

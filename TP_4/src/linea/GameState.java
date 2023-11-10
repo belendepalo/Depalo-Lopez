@@ -8,8 +8,8 @@ public abstract class GameState {
 
 	public abstract boolean finished();
 
-	public abstract String statusOfGame();
+	public abstract String statusOfGame(GameStateManager stateManager);
 
-	public abstract boolean canHandle(GameContext context);
+	public abstract boolean canHandle(GameStateManager stateManager);
 
 }
