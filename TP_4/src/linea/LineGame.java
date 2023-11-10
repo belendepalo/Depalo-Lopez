@@ -9,6 +9,7 @@ public class LineGame {
 
 	private static final String ErrorFullColumn = "Column is full!";
 	private static final String ErrorColumnOutOfBounds = "Column is out of parameter!";
+	private static final String ErrorGameVariantNotFound = "No game variant can handle the provided winVariant character: ";
 	private int width;
 	private int height;
 	private GameStateManager gameStateManager;
@@ -196,7 +197,7 @@ public class LineGame {
 	private void initializeWinningVariant(char winVariant) {
 		winVariants = winningVariantsList.stream().filter(variant -> variant.canHandle(winVariant)).findFirst()
 										 .orElseThrow(() -> new RuntimeException(
-												 	"No variant can handle the provided winVariant character: " + winVariant));
+												 ErrorGameVariantNotFound + winVariant));
 	}
 
 	private void updateGameStatus(char playedChip) {
