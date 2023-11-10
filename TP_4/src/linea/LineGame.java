@@ -13,7 +13,7 @@ public class LineGame {
 	private List<WinVariants> winningVariantsList = Arrays.asList(new WinVariantA(), new WinVariantB(), new WinVariantC());
 	private List<List<Character>> board = new ArrayList<>();
 	private GameState gameStatus = new RedsTurn();
-	private GameStateManager gameContext;
+	private GameStateManager gameManager;
 	private WinVariants winVariants;
 	private int height;
 	private int width;
@@ -23,7 +23,7 @@ public class LineGame {
 		this.height = height;
 		initializeBaseOfBoard();
 		initializeWinningVariant(winVariant);
-		this.gameContext = new GameStateManager('R');
+		this.gameManager = new GameStateManager('R');
 	}
 
 	public boolean isRedsTurn() {
@@ -87,7 +87,7 @@ public class LineGame {
 	}
 
 	public String winner() {
-		return gameStatus.statusOfGame(gameContext);
+		return gameStatus.statusOfGame(gameManager);
 	}
 
 	public boolean finished() {
@@ -190,19 +190,16 @@ public class LineGame {
 		return false;
 	}
 
-	// FUNCION EXTRA
-
 	private void initializeWinningVariant(char winVariant) {
 		winVariants = winningVariantsList.stream().filter(variant -> variant.canHandle(winVariant)).findFirst()
-										 .orElseThrow(() -> new RuntimeException(
-												 ErrorGameVariantNotFound + winVariant));
+										 .orElseThrow(() -> new RuntimeException(ErrorGameVariantNotFound + winVariant));
 	}
 
 	private void updateGameStatus(char playedChip) {
-		gameContext.updateContextAfterPlay(playedChip);
-		gameContext.setWinner(checkWin(playedChip));
-		gameContext.setTie(checkTie());
-		gameStatus = gameContext.getNextState(gameContext);
+		gameManager.updateContextAfterPlay(playedChip);
+		gameManager.setWinner(checkWin(playedChip));
+		gameManager.setTie(checkTie());
+		gameStatus = gameManager.getNextState(gameManager);
 	}
 
 }
