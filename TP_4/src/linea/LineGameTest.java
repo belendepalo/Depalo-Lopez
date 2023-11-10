@@ -10,6 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 public class LineGameTest {
+	private static final String ErrorColumnOutOfBounds = "Column is out of parameter!";
+	
 	@Test
 	public void test00_RedAlwaysStarts() {
 		LineGame game = new LineGame(7, 6, 'C');
@@ -77,7 +79,7 @@ public class LineGameTest {
 			game.playRedAt(0);
 			fail("Se esperaba una excepción, pero no se lanzó.");
 		} catch (RuntimeException e) {
-			assertEquals(LineGame.ErrorColumnOutOfBounds, e.getMessage());
+			assertEquals(ErrorColumnOutOfBounds, e.getMessage());
 		}
 
 	}
@@ -90,7 +92,7 @@ public class LineGameTest {
 			game.playBlueAt(0);
 			fail("Se esperaba una excepción, pero no se lanzó.");
 		} catch (RuntimeException e) {
-			assertEquals(LineGame.ErrorColumnOutOfBounds, e.getMessage());
+			assertEquals(ErrorColumnOutOfBounds, e.getMessage());
 		}
 
 	}

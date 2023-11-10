@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 public class LineGame {
 
 	private static final String ErrorFullColumn = "Column is full!";
-	public static final String ErrorColumnOutOfBounds = "Column is out of parameter!";
+	private static final String ErrorColumnOutOfBounds = "Column is out of parameter!";
 	private int width;
 	private int height;
 	private GameStateManager gameStateManager;
 	private GameContext gameContext;
 	private List<List<Character>> board = new ArrayList<>();
-	public GameState gameStatus = new RedsTurn();
+	private GameState gameStatus = new RedsTurn();
 	private List<WinVariants> winningVariantsList = Arrays.asList(new WinVariantA(), new WinVariantB(), new WinVariantC());
 	private WinVariants winVariants;
 
