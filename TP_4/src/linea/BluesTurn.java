@@ -1,10 +1,11 @@
 package linea;
 
 public class BluesTurn extends GameState {
+	public static String ErrorBluesTurn = "It's Blue's Turn!";
 
 	@Override
 	public String statusOfGame(GameStateManager stateManager) {
-		return "The game is still ongoing.";
+		return GameStillGoing;
 	}
 
 	@Override
@@ -14,7 +15,7 @@ public class BluesTurn extends GameState {
 
 	@Override
 	public void playRedAt(LineGame game, int column) {
-		throw new RuntimeException("It's Blue's Turn!");
+		throw new RuntimeException(ErrorBluesTurn);
 	}
 
 	@Override
