@@ -1,281 +1,186 @@
 package linea;
 
-import static org.junit.Assert.assertEquals;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+public class LineGame {
 
-import org.junit.jupiter.api.Test;
-
-public class LineGameTest {
-	private static final String ErrorColumnOutOfBounds = "Column is out of parameter!";
+	public static String ErrorFullColumn = "Column is full!";
+	public static String ErrorColumnOutOfBounds = "Column is out of parameter!";
+	public static String ErrorGameVariantNotFound = "No game variant can handle the provided winVariant character: ";
 	
-	@Test
-	public void test00_RedAlwaysStarts() {
-		LineGame game = new LineGame(7, 6, 'C');
-		assertTrue(game.isRedsTurn());
-		assertFalse(game.isBluesTurn());
+	private List<WinVariants> winningVariantsList = Arrays.asList(new WinVariantA(), new WinVariantB(), new WinVariantC());
+	private List<List<Character>> board = new ArrayList<>();
+	private GameState gameStatus = new RedsTurn();
+	private GameStateManager gameManager;
+	private WinVariants winVariants;
+	private int height;
+	private int width;
+
+	public LineGame(int width, int height, char winVariant) {
+		this.width = width;
+		this.height = height;
+		initializeBaseOfBoard();
+		initializeWinningVariant(winVariant);
+		this.gameManager = new GameStateManager('R');
 	}
 
-	@Test
-	public void test01_AfterRedPlaysIsBlueTurn() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(1);
-		assertFalse(game.isRedsTurn());
-		assertTrue(game.isBluesTurn());
+	public boolean isRedsTurn() {
+		return gameStatus instanceof RedsTurn;
+	}
+
+	public boolean isBluesTurn() {
+		return gameStatus instanceof BluesTurn;
+	}
+
+	public void playRedAt(int column) {
+		gameStatus.playRedAt(this, column - 1);
+		updateGameStatus('R');
+	}
+
+	public void playBlueAt(int column) {
+		gameStatus.playBlueAt(this, column - 1);
+		updateGameStatus('B');
 
 	}
 
-	@Test
-	public void test02_ErrorIsThrownAfterRedTriesToPlayTwice() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(1);
-		try {
-			game.playRedAt(3);
-			fail("Se esperaba una excepción, pero no se lanzó.");
-		} catch (RuntimeException e) {
-			assertEquals("It's Blue's Turn!", e.getMessage());
+	private void initializeBaseOfBoard() {
+		IntStream.range(0, width).forEach(i -> board.add(new ArrayList<>()));
+	}
+
+	public void placeChip(char chip, int column) {
+		if (column < 0 || column >= width) {
+			throw new RuntimeException(ErrorColumnOutOfBounds);
+
+		} else {
+			List<Character> targetColumn = board.get(column);
+			if (targetColumn.size() < height) {
+				targetColumn.add(chip);
+			} else {
+				throw new RuntimeException(ErrorFullColumn);
+			}
 		}
 
 	}
 
-	@Test
-	public void test03_ErrorIsThrownAfterBlueTriesToPlayTwice() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		try {
-			game.playBlueAt(3);
-			fail("Se esperaba una excepción, pero no se lanzó.");
-		} catch (RuntimeException e) {
-			assertEquals("It's Red's Turn!", e.getMessage());
+	public String show() {
+		  return IntStream.range(0, height).mapToObj(row -> IntStream.range(0, width).mapToObj(col -> {
+			  List<Character> column = board.get(col);
+			  return (column.size() > row) ? column.get(row) + " " : "- ";})
+			     .collect(Collectors.joining()) + "\n").collect(Collectors.collectingAndThen(Collectors.toList(), lines -> {
+			    	 Collections.reverse(lines);
+			         return String.join("", lines); }));
+	}
+
+	public String winner() {
+		return gameStatus.statusOfGame(gameManager);
+	}
+
+	public boolean finished() {
+		return gameStatus.finished();
+	}
+
+	public boolean checkWin(char chip) {
+		return winVariants.checkWin(chip, this);
+	}
+
+	public boolean checkTie() {
+		return board.stream().allMatch(column -> column.size() >= height);
+	}
+
+	public boolean checkVerticalWin(char player) {
+
+		int consecutiveCount = 0;
+
+		for (int col = 0; col < width; col++) {
+			List<Character> column = board.get(col);
+			consecutiveCount = 0;
+
+			for (char chip : column) {
+				if (chip == player) {
+					consecutiveCount++;
+					if (consecutiveCount >= 4) {
+						return true;
+					}
+				} else {
+					consecutiveCount = 0;
+				}
+			}
 		}
 
+		return false;
 	}
 
-	@Test
-	public void test04_RedsPlayIsValid() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(1);
-		assertTrue(game.show().contains("R"));
+	public boolean checkHorizontalWin(char player) {
+		for (int row = 0; row < height; row++) {
+			int consecutiveCount = 0;
 
-	}
-
-	@Test
-	public void test05_BluesPlayIsValid() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		assertTrue(game.show().contains("B"));
-
-	}
-
-	@Test
-	public void test06_RedsTriesToPlayInAColumnThatIsNotInTheGame() {
-		LineGame game = new LineGame(7, 6, 'C');
-		try {
-			game.playRedAt(0);
-			fail("Se esperaba una excepción, pero no se lanzó.");
-		} catch (RuntimeException e) {
-			assertEquals(ErrorColumnOutOfBounds, e.getMessage());
+			for (int col = 0; col < width; col++) {
+				List<Character> column = board.get(col);
+				if (column.size() > row && column.get(row) == player) {
+					consecutiveCount++;
+					if (consecutiveCount >= 4) {
+						return true;
+					}
+				} else {
+					consecutiveCount = 0;
+				}
+			}
 		}
 
+		return false;
 	}
 
-	@Test
-	public void test07_BluesTriesToPlayInAColumnThatIsNotInTheGame() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(1);
-		try {
-			game.playBlueAt(0);
-			fail("Se esperaba una excepción, pero no se lanzó.");
-		} catch (RuntimeException e) {
-			assertEquals(ErrorColumnOutOfBounds, e.getMessage());
+	public boolean checkDescendingDiagonalWin(char player) {
+		for (int row = 0; row <= height - 4; row++) {
+			for (int col = 0; col <= width - 4; col++) {
+				boolean hasDiagonalWin = true;
+				for (int i = 0; i < 4; i++) {
+					if (board.get(col + i).size() <= row + i || board.get(col + i).get(row + i) != player) {
+						hasDiagonalWin = false;
+						break;
+					}
+				}
+				if (hasDiagonalWin) {
+					return true;
+				}
+			}
 		}
-
+		return false;
 	}
 
-	@Test
-	public void test08_RedsAndBluesPlaysAreValidAndTheGameIsStillGoing() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		assertTrue(game.show().contains("R"));
-		assertTrue(game.show().contains("B"));
-		assertEquals("The game is still ongoing.", game.winner());
-
-	}
-
-	@Test
-	public void test09_ErrorIsThrownAfterRedsTryToPlayWhenColumnIsFull() {
-		LineGame game = new LineGame(7, 6, 'C');
-		for (int i = 0; i < 3; i++) {
-			game.playRedAt(3);
-			game.playBlueAt(3);
+	public boolean checkAscendingDiagonalWin(char player) {
+		for (int row = 3; row < height; row++) {
+			for (int col = 0; col <= width - 4; col++) {
+				boolean hasDiagonalWin = true;
+				for (int i = 0; i < 4; i++) {
+					if (board.get(col + i).size() <= row - i || board.get(col + i).get(row - i) != player) {
+						hasDiagonalWin = false;
+						break;
+					}
+				}
+				if (hasDiagonalWin) {
+					return true;
+				}
+			}
 		}
-
-		try {
-			game.playRedAt(3);
-			fail("Se esperaba una excepción, pero no se lanzó.");
-		} catch (RuntimeException e) {
-			assertEquals("Column is full!", e.getMessage());
-		}
+		return false;
 	}
 
-	@Test
-	public void test10_RedWinsHorizontallyWithWinningVariantA() {
-		LineGame game = new LineGame(7, 6, 'A');
-		game.playRedAt(1);
-		game.playBlueAt(1);
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		game.playRedAt(3);
-		game.playBlueAt(1);
-		game.playRedAt(4);
-		assertTrue(game.finished());
-		assertEquals("R has won the game!", game.winner());
-
+	private void initializeWinningVariant(char winVariant) {
+		winVariants = winningVariantsList.stream().filter(variant -> variant.canHandle(winVariant)).findFirst()
+										 .orElseThrow(() -> new RuntimeException(ErrorGameVariantNotFound + winVariant));
 	}
 
-	@Test
-	public void test11_BlueWinsVerticallyWithWinningVariantA() {
-		LineGame game = new LineGame(7, 6, 'A');
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		game.playRedAt(3);
-		game.playBlueAt(1);
-		game.playRedAt(4);
-		game.playBlueAt(1);
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		assertTrue(game.finished());
-		assertEquals("B has won the game!", game.winner());
-
+	private void updateGameStatus(char playedChip) {
+		gameManager.updateContextAfterPlay(playedChip);
+		gameManager.setWinner(checkWin(playedChip));
+		gameManager.setTie(checkTie());
+		gameStatus = gameManager.getNextState(gameManager);
 	}
 
-	@Test
-	public void test12_RedWinsInDiagonalWithWinningVariantB() {
-		LineGame game = new LineGame(7, 6, 'B');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(2);
-		game.playBlueAt(3);
-		game.playRedAt(3);
-		game.playBlueAt(4);
-		game.playRedAt(3);
-		game.playBlueAt(4);
-		game.playRedAt(4);
-		game.playBlueAt(6);
-		game.playRedAt(4);
-		assertTrue(game.finished());
-		assertEquals("R has won the game!", game.winner());
-
-	}
-
-	@Test
-	public void test13_RedWinsHorizontallyWithWinningVariantC() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(1);
-		game.playBlueAt(1);
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		game.playRedAt(3);
-		game.playBlueAt(1);
-		game.playRedAt(4);
-		assertTrue(game.finished());
-		assertEquals("R has won the game!", game.winner());
-
-	}
-
-	@Test
-	public void test14_BlueWinsVerticallyWithWinningVariantC() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		game.playRedAt(3);
-		game.playBlueAt(1);
-		game.playRedAt(4);
-		game.playBlueAt(1);
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		assertTrue(game.finished());
-		assertEquals("B has won the game!", game.winner());
-
-	}
-
-	@Test
-	public void test15_RedWinsInDiagonalWithWinningVariantC() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(2);
-		game.playBlueAt(3);
-		game.playRedAt(3);
-		game.playBlueAt(4);
-		game.playRedAt(3);
-		game.playBlueAt(4);
-		game.playRedAt(4);
-		game.playBlueAt(6);
-		game.playRedAt(4);
-		assertTrue(game.finished());
-		assertEquals("R has won the game!", game.winner());
-
-	}
-
-	@Test
-	public void test16_GameEndedInATie() {
-		LineGame game = new LineGame(3, 3, 'C');
-		game.playRedAt(1);
-		game.playBlueAt(1);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(2);
-		game.playBlueAt(2);
-		game.playRedAt(3);
-		game.playBlueAt(3);
-		game.playRedAt(3);
-		assertTrue(game.finished());
-		 assertEquals("The game ended in a tie!", game.winner());
-	}
-
-	@Test
-	public void test17_GameEndedButRedTriesToPlay() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		game.playRedAt(3);
-		game.playBlueAt(1);
-		game.playRedAt(4);
-		game.playBlueAt(1);
-		game.playRedAt(2);
-		game.playBlueAt(1);
-		assertTrue(game.finished());
-		try {
-			game.playRedAt(3);
-			fail("Se esperaba una excepción, pero no se lanzó.");
-		} catch (RuntimeException e) {
-			assertEquals("Game Over!", e.getMessage());
-		}
-	}
-
-	@Test
-	public void test18_GameEndedButBlueTriesToPlay() {
-		LineGame game = new LineGame(7, 6, 'C');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		assertTrue(game.finished());
-		try {
-			game.playBlueAt(2);
-			fail("Se esperaba una excepción, pero no se lanzó.");
-		} catch (RuntimeException e) {
-			assertEquals("Game Over!", e.getMessage());
-		}
-	}
 }
