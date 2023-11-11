@@ -14,13 +14,13 @@ public class GameEndedWithWinner extends GameState {
 
 	@Override
 	public void playRedAt(LineGame game, int column) {
-		throw new RuntimeException("Game Over!");
+		throw new RuntimeException(GameOver);
 
 	}
 
 	@Override
 	public void playBlueAt(LineGame game, int column) {
-		throw new RuntimeException("Game Over!");
+		throw new RuntimeException(GameOver);
 	}
 
 	@Override
