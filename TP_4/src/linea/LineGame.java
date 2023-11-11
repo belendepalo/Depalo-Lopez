@@ -2,14 +2,17 @@ package linea;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class LineGame {
 
-	private static final String ErrorFullColumn = "Column is full!";
-	private static final String ErrorColumnOutOfBounds = "Column is out of parameter!";
-	private static final String ErrorGameVariantNotFound = "No game variant can handle the provided winVariant character: ";
+	public static String ErrorFullColumn = "Column is full!";
+	public static String ErrorColumnOutOfBounds = "Column is out of parameter!";
+	public static String ErrorGameVariantNotFound = "No game variant can handle the provided winVariant character: ";
+	
 	private List<WinVariants> winningVariantsList = Arrays.asList(new WinVariantA(), new WinVariantB(), new WinVariantC());
 	private List<List<Character>> board = new ArrayList<>();
 	private GameState gameStatus = new RedsTurn();
@@ -46,9 +49,7 @@ public class LineGame {
 	}
 
 	private void initializeBaseOfBoard() {
-		for (int i = 0; i < width; i++) {
-			board.add(new ArrayList<>()); // Agrega listas vacías para representar las columnas
-		}
+		IntStream.range(0, width).forEach(i -> board.add(new ArrayList<>()));
 	}
 
 	public void placeChip(char chip, int column) {
@@ -58,7 +59,6 @@ public class LineGame {
 		} else {
 			List<Character> targetColumn = board.get(column);
 			if (targetColumn.size() < height) {
-				// Agregar el chip a la columna
 				targetColumn.add(chip);
 			} else {
 				throw new RuntimeException(ErrorFullColumn);
@@ -68,22 +68,12 @@ public class LineGame {
 	}
 
 	public String show() {
-
-		StringBuilder boardString = new StringBuilder();
-
-		for (int row = height - 1; row >= 0; row--) {
-			for (int col = 0; col < width; col++) {
-				List<Character> column = board.get(col);
-				if (column.size() > row) {
-					boardString.append(column.get(row)).append(" ");
-				} else {
-					boardString.append("- "); // Carácter para indicar celda vacía
-				}
-			}
-			boardString.append("\n"); // Nueva línea para la siguiente fila
-		}
-
-		return boardString.toString();
+		  return IntStream.range(0, height).mapToObj(row -> IntStream.range(0, width).mapToObj(col -> {
+			  List<Character> column = board.get(col);
+			  return (column.size() > row) ? column.get(row) + " " : "- ";})
+			     .collect(Collectors.joining()) + "\n").collect(Collectors.collectingAndThen(Collectors.toList(), lines -> {
+			    	 Collections.reverse(lines);
+			         return String.join("", lines); }));
 	}
 
 	public String winner() {
@@ -94,23 +84,14 @@ public class LineGame {
 		return gameStatus.finished();
 	}
 
-	// GANAR EL JUEGO
-
 	public boolean checkWin(char chip) {
 		return winVariants.checkWin(chip, this);
 	}
 
 	public boolean checkTie() {
-
-		for (List<Character> column : board) {
-			if (column.size() < height) {
-				return false; // Si alguna columna no está llena, el tablero no está lleno
-			}
-		}
-		return true; // Si todas las columnas están llenas, el tablero está lleno y hay un empate
+		return board.stream().allMatch(column -> column.size() >= height);
 	}
 
-	// ESTRATEGIAS PARA GANAR EL JUEGO
 	public boolean checkVerticalWin(char player) {
 
 		int consecutiveCount = 0;
@@ -123,15 +104,15 @@ public class LineGame {
 				if (chip == player) {
 					consecutiveCount++;
 					if (consecutiveCount >= 4) {
-						return true; // Cuatro fichas consecutivas encontradas verticalmente
+						return true;
 					}
 				} else {
-					consecutiveCount = 0; // Reiniciar el contador si no hay una ficha del jugador actual
+					consecutiveCount = 0;
 				}
 			}
 		}
 
-		return false; // No se encontraron cuatro fichas consecutivas verticalmente
+		return false;
 	}
 
 	public boolean checkHorizontalWin(char player) {
@@ -143,15 +124,15 @@ public class LineGame {
 				if (column.size() > row && column.get(row) == player) {
 					consecutiveCount++;
 					if (consecutiveCount >= 4) {
-						return true; // Cuatro fichas consecutivas encontradas horizontalmente
+						return true;
 					}
 				} else {
-					consecutiveCount = 0; // Reiniciar el contador si no hay una ficha del jugador actual
+					consecutiveCount = 0;
 				}
 			}
 		}
 
-		return false; // No se encontraron cuatro fichas consecutivas horizontalmente
+		return false;
 	}
 
 	public boolean checkDescendingDiagonalWin(char player) {
