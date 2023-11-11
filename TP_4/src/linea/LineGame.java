@@ -12,8 +12,9 @@ public class LineGame {
 	public static String ErrorFullColumn = "Column is full!";
 	public static String ErrorColumnOutOfBounds = "Column is out of parameter!";
 	public static String ErrorGameVariantNotFound = "No game variant can handle the provided winVariant character: ";
-	
-	private List<WinVariants> winningVariantsList = Arrays.asList(new WinVariantA(), new WinVariantB(), new WinVariantC());
+
+	private List<WinVariants> winningVariantsList = Arrays.asList(new WinVariantA(), new WinVariantB(),
+			new WinVariantC());
 	private List<List<Character>> board = new ArrayList<>();
 	private GameState gameStatus = new RedsTurn();
 	private GameStateManager gameManager;
@@ -68,12 +69,13 @@ public class LineGame {
 	}
 
 	public String show() {
-		  return IntStream.range(0, height).mapToObj(row -> IntStream.range(0, width).mapToObj(col -> {
-			  List<Character> column = board.get(col);
-			  return (column.size() > row) ? column.get(row) + " " : "- ";})
-			     .collect(Collectors.joining()) + "\n").collect(Collectors.collectingAndThen(Collectors.toList(), lines -> {
-			    	 Collections.reverse(lines);
-			         return String.join("", lines); }));
+		return IntStream.range(0, height).mapToObj(row -> IntStream.range(0, width).mapToObj(col -> {
+			List<Character> column = board.get(col);
+			return (column.size() > row) ? column.get(row) + " " : "- ";
+		}).collect(Collectors.joining()) + "\n").collect(Collectors.collectingAndThen(Collectors.toList(), lines -> {
+			Collections.reverse(lines);
+			return String.join("", lines);
+		}));
 	}
 
 	public String winner() {
@@ -93,87 +95,39 @@ public class LineGame {
 	}
 
 	public boolean checkVerticalWin(char player) {
-
-		int consecutiveCount = 0;
-
-		for (int col = 0; col < width; col++) {
+		return IntStream.range(0, width).anyMatch(col -> {
 			List<Character> column = board.get(col);
-			consecutiveCount = 0;
+			return IntStream.range(0, column.size()).filter(i -> column.get(i) == player)
+					.mapToObj(i -> IntStream.rangeClosed(i, Math.min(i + 3, column.size() - 1)).mapToObj(column::get)
+							.collect(Collectors.toList()))
+					.anyMatch(subList -> isWinningSequence(subList, player));
+		});
+	}
 
-			for (char chip : column) {
-				if (chip == player) {
-					consecutiveCount++;
-					if (consecutiveCount >= 4) {
-						return true;
-					}
-				} else {
-					consecutiveCount = 0;
-				}
-			}
-		}
-
-		return false;
+	private boolean isWinningSequence(List<Character> sequence, char player) {
+		return sequence.size() == 4 && sequence.stream().allMatch(c -> c == player);
 	}
 
 	public boolean checkHorizontalWin(char player) {
-		for (int row = 0; row < height; row++) {
-			int consecutiveCount = 0;
-
-			for (int col = 0; col < width; col++) {
-				List<Character> column = board.get(col);
-				if (column.size() > row && column.get(row) == player) {
-					consecutiveCount++;
-					if (consecutiveCount >= 4) {
-						return true;
-					}
-				} else {
-					consecutiveCount = 0;
-				}
-			}
-		}
-
-		return false;
+		return IntStream.range(0, height).anyMatch(row -> IntStream.range(0, width - 3).anyMatch(col -> IntStream
+				.range(col, col + 4).allMatch(c -> board.get(c).size() > row && board.get(c).get(row) == player)));
 	}
 
 	public boolean checkDescendingDiagonalWin(char player) {
-		for (int row = 0; row <= height - 4; row++) {
-			for (int col = 0; col <= width - 4; col++) {
-				boolean hasDiagonalWin = true;
-				for (int i = 0; i < 4; i++) {
-					if (board.get(col + i).size() <= row + i || board.get(col + i).get(row + i) != player) {
-						hasDiagonalWin = false;
-						break;
-					}
-				}
-				if (hasDiagonalWin) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return IntStream.range(0, height - 3)
+				.anyMatch(row -> IntStream.range(0, width - 3).anyMatch(col -> IntStream.range(0, 4).allMatch(
+						i -> board.get(col + i).size() > row + i && board.get(col + i).get(row + i) == player)));
 	}
 
 	public boolean checkAscendingDiagonalWin(char player) {
-		for (int row = 3; row < height; row++) {
-			for (int col = 0; col <= width - 4; col++) {
-				boolean hasDiagonalWin = true;
-				for (int i = 0; i < 4; i++) {
-					if (board.get(col + i).size() <= row - i || board.get(col + i).get(row - i) != player) {
-						hasDiagonalWin = false;
-						break;
-					}
-				}
-				if (hasDiagonalWin) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return IntStream.range(3, height)
+				.anyMatch(row -> IntStream.range(0, width - 3).anyMatch(col -> IntStream.range(0, 4).allMatch(
+						i -> board.get(col + i).size() > row - i && board.get(col + i).get(row - i) == player)));
 	}
 
 	private void initializeWinningVariant(char winVariant) {
 		winVariants = winningVariantsList.stream().filter(variant -> variant.canHandle(winVariant)).findFirst()
-										 .orElseThrow(() -> new RuntimeException(ErrorGameVariantNotFound + winVariant));
+				.orElseThrow(() -> new RuntimeException(ErrorGameVariantNotFound + winVariant));
 	}
 
 	private void updateGameStatus(char playedChip) {

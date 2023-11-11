@@ -17,7 +17,7 @@ public class GameStateManager {
 
 	public GameState getNextState(GameStateManager stateManager) {
 		return states.stream().filter(state -> state.canHandle(stateManager)).findFirst()
-					 .orElseThrow(() -> new RuntimeException("No valid game state found."));
+				.orElseThrow(() -> new RuntimeException("No valid game state found."));
 	}
 
 	public void updateContextAfterPlay(char chip) {

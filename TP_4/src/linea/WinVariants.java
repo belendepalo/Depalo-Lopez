@@ -5,6 +5,7 @@ public abstract class WinVariants {
 	protected char player;
 
 	public abstract boolean checkWin(char chip, LineGame game);
+
 	public abstract boolean canHandle(char variantIdentifier);
-	
+
 }
