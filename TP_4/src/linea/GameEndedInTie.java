@@ -4,7 +4,7 @@ public class GameEndedInTie extends GameState {
 
 	@Override
 	public String statusOfGame(GameStateManager stateManager) {
-		return "The game ended in a tie!";
+		return GameEndedTie;
 	}
 
 	@Override
@@ -14,12 +14,12 @@ public class GameEndedInTie extends GameState {
 
 	@Override
 	public void playRedAt(LineGame game, int column) {
-		throw new RuntimeException("Game Over!");
+		throw new RuntimeException(GameOver);
 	}
 
 	@Override
 	public void playBlueAt(LineGame game, int column) {
-		throw new RuntimeException("Game Over!");
+		throw new RuntimeException(GameOver);
 	}
 
 	@Override
